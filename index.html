@@ -551,10 +551,13 @@ function parseCSVToUniversities(csvText) {
 // Hämta och uppdatera data från Google Sheets
 async function fetchAndUpdateData() {
   try {
-    const response = await fetch(CSV_URL);
-    if (!response.ok) throw new Error('Kunde inte hämta data');
+    // Lägg till CORS proxy för att undvika blockering
+    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+    const response = await fetch(proxyUrl + CSV_URL);
+    if (!response.ok) throw new Error('Kunde inte hämta data: ' + response.status);
     
     const csvText = await response.text();
+    console.log('CSV laddat:', csvText.substring(0, 200)); // Visa första 200 tecken
     universities = parseCSVToUniversities(csvText);
     
     // Uppdatera UI
@@ -567,7 +570,7 @@ async function fetchAndUpdateData() {
     }
   } catch (error) {
     console.error('Fel vid hämtning av data:', error);
-    document.getElementById('divider-label').textContent = 'Fel vid hämtning av data — försök igen senare';
+    document.getElementById('divider-label').textContent = 'Fel vid hämtning av data — ' + error.message;
   }
 }
 
