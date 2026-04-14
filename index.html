@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="sv">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Freemover</title>
+<title>UniMatchr</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -411,90 +411,86 @@
 <body>
 
 <nav>
-  <div class="logo">Freemover</div>
-  <div class="nav-tag">Beta — Nederländerna & Finland</div>
+  <div class="logo">UniMatchr</div>
+  <div class="nav-tag">Version Beta</div>
 </nav>
 
 <section class="hero">
-  <p class="hero-label">Utbytesstudier, förenklat</p>
-  <h1>Hitta ditt <em>rätta</em><br>utbytesuniversitet</h1>
-  <p class="hero-sub">Se vilka utländska lärosäten som matchar just din utbildning — utan att leta igenom hundratals hemsidor.</p>
+  <p class="hero-label">Exchange studies, simplified</p>
+  <h1>Find your <em>perfect</em><br>exchange university</h1>
+  <p class="hero-sub">See which universities match your degree — without browsing hundreds of websites.</p>
 </section>
 
 <section class="search-section">
   <div class="search-grid">
     <div class="field">
-      <label>Ditt lärosäte</label>
+      <label>Your University</label>
       <select id="sel-home">
-        <option>Linköpings universitet</option>
+        <option>Linköping University</option>
         <option>KTH</option>
         <option>Chalmers</option>
-        <option>Lunds universitet</option>
+        <option>Lund University</option>
       </select>
     </div>
     <div class="field">
-      <label>Din utbildning</label>
+      <label>Your Program</label>
       <select id="sel-prog">
-        <option>Civilingenjör Datateknik</option>
-        <option>Civilingenjör Maskinteknik</option>
-        <option>Ekonomi</option>
+        <option>Computer Science & Engineering</option>
+        <option>Mechanical Engineering</option>
+        <option>Economics</option>
       </select>
     </div>
   </div>
   <div class="search-grid-3">
     <div class="field">
-      <label>Land</label>
+      <label>Country</label>
       <select id="sel-country">
-        <option value="all">Alla länder</option>
-        <option value="Nederländerna">Nederländerna</option>
-        <option value="Finland">Finland</option>
+        <option value="all">All Countries</option>
       </select>
     </div>
     <div class="field">
-      <label>Termin</label>
+      <label>Semester</label>
       <select id="sel-term">
-        <option>Höst 2025</option>
-        <option>Vår 2026</option>
+        <option>Fall</option>
+        <option>Spring</option>
       </select>
     </div>
     <div class="field">
-      <label>Språk</label>
+      <label>Language</label>
       <select id="sel-lang">
-        <option value="all">Alla</option>
-        <option value="Engelska">Engelska</option>
+        <option value="all">All</option>
+        <option value="English">English</option>
       </select>
     </div>
   </div>
-  <button class="search-btn" onclick="runSearch()">Sök kompatibla universitet →</button>
+  <button class="search-btn" onclick="runSearch()">Search Compatible Universities →</button>
 </section>
 
 <div class="divider">
   <div class="divider-line"></div>
-  <div class="divider-text" id="divider-label">Laddar data...</div>
+  <div class="divider-text" id="divider-label">Loading data...</div>
   <div class="divider-line"></div>
 </div>
 
 <section class="results">
   <div id="results-header" class="results-header" style="display:none">
-    <h2 id="results-title">Resultat</h2>
+    <h2 id="results-title">Results</h2>
     <span id="results-count"></span>
   </div>
   <div class="filters" id="filters" style="display:none">
-    <button class="filter-btn active" onclick="setFilter(this,'all')">Alla</button>
-    <button class="filter-btn" onclick="setFilter(this,'nl')">Nederländerna</button>
-    <button class="filter-btn" onclick="setFilter(this,'fi')">Finland</button>
-    <button class="filter-btn" onclick="setFilter(this,'free')">Utan avgift</button>
+    <button class="filter-btn active" onclick="setFilter(this,'all')">All</button>
+    <button class="filter-btn" onclick="setFilter(this,'cheapest')">Cheapest</button>
+    <button class="filter-btn" onclick="setFilter(this,'gpa')">GPA Requirement</button>
   </div>
   <div id="uni-list"></div>
 </section>
 
 <footer>
-  <span>Freemover © 2025</span>
-  <span>Data uppdaterad från Google Sheets — <span id="last-sync">laddar...</span></span>
+  <span>UniMatchr © 2025</span>
+  <span>Data updated from Google Sheets — <span id="last-sync">loading...</span></span>
 </footer>
 
-
- <script>
+<script>
 let universities = [];
 let currentFilter = 'all';
 let searched = false;
@@ -562,12 +558,12 @@ function parseCSVToUniversities(csvText) {
     
     const uni = {
       id: values[0],
-      name: values[1] || 'Okänt universitet',
-      country: values[2] || 'Okänt land',
-      city: values[3] || 'Okänd stad',
+      name: values[1] || 'Unknown University',
+      country: values[2] || 'Unknown Country',
+      city: values[3] || 'Unknown City',
       url: values[4] || '#',
-      lang: values[5] || 'Engelska',
-      freemover: values[6] || 'Okänt',
+      lang: values[5] || 'English',
+      freemover: values[6] || 'Unknown',
       deadline_ht: values[7] || '—',
       deadline_vt: values[8] || '—',
       cost: values[9] ? parseInt(values[9]) : null,
@@ -591,13 +587,10 @@ function updateCountryDropdown() {
   const countries = [...new Set(universities.map(u => u.country))].sort();
   const select = document.getElementById('sel-country');
   
-  // Spara värdet som var valt
   const currentValue = select.value;
   
-  // Rensa och lägg till "Alla länder"
-  select.innerHTML = '<option value="all">Alla länder</option>';
+  select.innerHTML = '<option value="all">All Countries</option>';
   
-  // Lägg till alla länder från databasen
   countries.forEach(country => {
     if (country) {
       const option = document.createElement('option');
@@ -607,7 +600,6 @@ function updateCountryDropdown() {
     }
   });
   
-  // Återställ värdet om det finns
   if (currentValue !== 'all' && countries.includes(currentValue)) {
     select.value = currentValue;
   }
@@ -616,12 +608,12 @@ function updateCountryDropdown() {
 async function fetchAndUpdateData() {
   try {
     const response = await fetch(CSV_URL);
-    if (!response.ok) throw new Error('Kunde inte hämta data');
+    if (!response.ok) throw new Error('Could not fetch data');
     
     const csvText = await response.text();
     universities = parseCSVToUniversities(csvText);
     
-    updateCountryDropdown(); // NYTT: Uppdatera dropdowns
+    updateCountryDropdown();
     updateDividerLabel();
     updateLastSync();
     
@@ -629,19 +621,19 @@ async function fetchAndUpdateData() {
       runSearch();
     }
   } catch (error) {
-    console.error('Fel vid hämtning av data:', error);
-    document.getElementById('divider-label').textContent = 'Fel vid hämtning av data';
+    console.error('Error fetching data:', error);
+    document.getElementById('divider-label').textContent = 'Error fetching data';
   }
 }
 
 function updateDividerLabel() {
-  document.getElementById('divider-label').textContent = universities.length + ' lärosäten i databasen';
+  document.getElementById('divider-label').textContent = universities.length + ' universities in database';
 }
 
 function updateLastSync() {
   const now = new Date();
-  const timeStr = now.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' });
-  document.getElementById('last-sync').textContent = 'uppdaterad ' + timeStr;
+  const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  document.getElementById('last-sync').textContent = 'updated ' + timeStr;
 }
 
 function badgeClass(m) {
@@ -658,15 +650,14 @@ function fillClass(m) {
   return 'fill-low';
 }
 
-// ÄNDRAT: "/ år" → "/ termin"
 function fmtCost(c) {
-  if (c === null || c === undefined) return 'Okänt';
-  if (c === 0) return 'Gratis';
-  return '€' + c.toLocaleString('sv-SE') + ' / termin';
+  if (c === null || c === undefined) return 'Unknown';
+  if (c === 0) return 'Free';
+  return '€' + c.toLocaleString('en-US') + ' / term';
 }
 
 function renderCard(u, delay) {
-  const matchLabel = u.match !== null ? u.match + '% matchning' : 'Ej beräknad';
+  const matchLabel = u.match !== null ? u.match + '% match' : 'Not calculated';
   const matchWidth = u.match !== null ? u.match : 20;
   
   return `
@@ -684,31 +675,38 @@ function renderCard(u, delay) {
       </div>
       <div class="card-meta">
         <div class="meta-item">
-          <span class="meta-label">Avgift</span>
+          <span class="meta-label">Tuition</span>
           <span class="meta-val">${fmtCost(u.cost)}</span>
         </div>
         <div class="meta-item">
-          <span class="meta-label">Språk</span>
+          <span class="meta-label">Language</span>
           <span class="meta-val">${u.lang}</span>
         </div>
         <div class="meta-item">
-          <span class="meta-label">Deadline HT</span>
+          <span class="meta-label">Deadline Fall</span>
           <span class="meta-val">${u.deadline_ht}</span>
         </div>
         <div class="meta-item">
-          <span class="meta-label">Språkkrav</span>
-          <span class="meta-val">${u.spraakkrav}</span>
+          <span class="meta-label">GPA Requirement</span>
+          <span class="meta-val">${u.gpa_krav}</span>
         </div>
       </div>
       ${u.anteckningar ? `<p style="margin-top:1rem;font-size:0.9rem;color:var(--text-muted);font-style:italic;">${u.anteckningar}</p>` : ''}
-      <a class="card-link" href="${u.url}" target="_blank">Besök universitetet →</a>
+      <a class="card-link" href="${u.url}" target="_blank">Visit University →</a>
     </div>`;
 }
 
 function applyFilter(list) {
-  if (currentFilter === 'nl')   return list.filter(u => u.country === 'Nederländerna');
-  if (currentFilter === 'fi')   return list.filter(u => u.country === 'Finland');
-  if (currentFilter === 'free') return list.filter(u => u.cost === 0);
+  if (currentFilter === 'cheapest') {
+    return list.sort((a, b) => {
+      const costA = a.cost ?? Infinity;
+      const costB = b.cost ?? Infinity;
+      return costA - costB;
+    });
+  }
+  if (currentFilter === 'gpa') {
+    return list.filter(u => u.gpa_krav && u.gpa_krav !== '—');
+  }
   return list;
 }
 
@@ -725,7 +723,7 @@ function runSearch() {
 
   document.getElementById('results-header').style.display = 'flex';
   document.getElementById('filters').style.display = 'flex';
-  document.getElementById('results-title').textContent = 'Kompatibla universitet';
+  document.getElementById('results-title').textContent = 'Compatible Universities';
 
   window._searchResult = list;
   renderList(list);
@@ -733,10 +731,10 @@ function runSearch() {
 
 function renderList(list) {
   const filtered = applyFilter(list);
-  document.getElementById('results-count').textContent = filtered.length + ' lärosäten';
+  document.getElementById('results-count').textContent = filtered.length + ' universities';
   const el = document.getElementById('uni-list');
   if (!filtered.length) {
-    el.innerHTML = '<div class="empty">Inga resultat – prova andra filter.</div>';
+    el.innerHTML = '<div class="empty">No results — try different filters.</div>';
     return;
   }
   el.innerHTML = filtered.map((u, i) => renderCard(u, i * 0.07)).join('');
