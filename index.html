@@ -481,17 +481,14 @@ let universities = [];
 let currentFilter = 'all';
 let searched = false;
 
-// NY FUNKTION: Ladda från Google Sheets
+// === NYTT: Ladda data från Google Sheets ===
 async function loadData() {
   try {
     const response = await fetch(CSV_URL);
     const csvText = await response.text();
     universities = parseCSV(csvText);
-    
     document.getElementById('divider-label').textContent = universities.length + ' lärosäten i databasen';
-    
-    // Visa resultat direkt när data laddats
-    runSearch();
+    runSearch(); // visa resultat direkt
   } catch (e) {
     console.error(e);
     document.getElementById('divider-label').textContent = 'Kunde inte ladda data från Google Sheets';
@@ -501,12 +498,10 @@ async function loadData() {
 function parseCSV(csv) {
   const rows = csv.trim().split('\n');
   const data = [];
-
   for (let i = 1; i < rows.length; i++) {
     const cols = rows[i].split(',').map(c => c.replace(/"/g, '').trim());
     if (cols.length < 6) continue;
-    
-    if (cols[5] && cols[5].toLowerCase() === 'ja') {  // Accepterar freemovers
+    if (cols[5] && cols[5].toLowerCase() === 'ja') {
       data.push({
         id: cols[0],
         name: cols[1],
@@ -518,16 +513,16 @@ function parseCSV(csv) {
         cost: cols[8] ? parseInt(cols[8]) : null,
         reg: cols[9] ? parseInt(cols[9]) : null,
         spraakkrav: cols[11] || "",
-        match: 75,                    // Kan förbättras senare
+        match: 75,
         comment: cols[14] || "",
-        courses: []                   // Kan fyllas på senare
+        courses: []
       });
     }
   }
   return data;
 }
 
-// === Dina originalfunktioner (oförändrade) ===
+// === Dina exakta originalfunktioner (oförändrade) ===
 function badgeClass(m) {
   if (m === null) return 'badge-low';
   if (m >= 80) return 'badge-high';
@@ -588,27 +583,23 @@ function renderCard(u, delay) {
 function applyFilter(list) {
   const country = document.getElementById('sel-country').value;
   if (currentFilter === 'high') return list.filter(u => u.match >= 80);
-  if (currentFilter === 'nl')   return list.filter(u => u.country === 'Nederländerna');
-  if (currentFilter === 'fi')   return list.filter(u => u.country === 'Finland');
+  if (currentFilter === 'nl') return list.filter(u => u.country === 'Nederländerna');
+  if (currentFilter === 'fi') return list.filter(u => u.country === 'Finland');
   if (currentFilter === 'free') return list.filter(u => u.cost === 0);
   return list;
 }
 function runSearch() {
   searched = true;
   const country = document.getElementById('sel-country').value;
-  const lang    = document.getElementById('sel-lang').value;
-
+  const lang = document.getElementById('sel-lang').value;
   let list = [...universities];
   if (country !== 'all') list = list.filter(u => u.country === country);
-  if (lang !== 'all')    list = list.filter(u => u.lang.includes(lang));
-
+  if (lang !== 'all') list = list.filter(u => u.lang.includes(lang));
   list.sort((a, b) => (b.match ?? -1) - (a.match ?? -1));
-
   document.getElementById('results-header').style.display = 'flex';
   document.getElementById('filters').style.display = 'flex';
   document.getElementById('divider-label').textContent = list.length + ' resultat hittade';
   document.getElementById('results-title').textContent = 'Kompatibla universitet';
-
   window._searchResult = list;
   renderList(list);
 }
@@ -629,7 +620,7 @@ function setFilter(btn, type) {
   if (window._searchResult) renderList(window._searchResult);
 }
 
-// Starta laddning av data
+// Starta
 loadData();
 </script>
 </body>
