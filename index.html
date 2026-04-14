@@ -498,201 +498,75 @@ let universities = [];
 let currentFilter = 'all';
 let searched = false;
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTAa9qeWsvV_sYuZ5m8-2t-3N08Y2sN1_au0tEZqBYWzFRJP9NGLTxZKSN40y-Sq6HoDbWH-iO80bPT/pub?output=csv';
-const REFRESH_INTERVAL = 5 * 60 * 1000; // 5 minuter
 
-// Parsa CSV-data till universitets-objekt - UPPDATERAD FÖR DINA KOLUMNER
+// Parsa CSV-data
 function parseCSVToUniversities(csvText) {
+  console.log('=== PARSING START ===');
+  console.log('Raw text length:', csvText.length);
+  console.log('First 300 chars:', csvText.substring(0, 300));
+  
   const lines = csvText.trim().split('\n');
-  if (lines.length < 2) return [];
+  console.log('Number of lines:', lines.length);
+  console.log('First line:', lines[0]);
   
-  // Splitta på TAB (inte komma, för att hantera tabbseparerad data från Google Sheets)
-  const headers = lines[0].split('\t').map(h => h.trim());
-  const unis = [];
-  
-  console.log('Headers found:', headers); // Debug
-  
-  for (let i = 1; i < lines.length; i++) {
-    const values = lines[i].split('\t').map(v => v.trim());
-    if (values.length < 3 || !values[0]) continue;
-    
-    // Mappa enligt dina kolumner:
-    // 0: uni_id, 1: Namn, 2: Land, 3: Stad, 4: Webbplats, 5: Undervisningsspråk, 
-    // 6: Accepterar freemovers, 7: Ansökningsdeadline (HT), 8: Ansökningsdeadline (VT), 
-    // 9: Terminsavgift (EUR), 10: Registreringsavgift (EUR), 11: Min GPA-krav, 
-    // 12: Språkkrav, 13: Max antal terminer, 14: Kontakt-email, 15: Anteckningar
-    
-    const uni = {
-      id: values[0],
-      name: values[1] || 'Okänt universitet',
-      country: values[2] || 'Okänt land',
-      city: values[3] || 'Okänd stad',
-      url: values[4] || '#',
-      lang: values[5] || 'Engelska',
-      freemover: values[6] || 'Okänt',
-      deadline_ht: values[7] || '—',
-      deadline_vt: values[8] || '—',
-      cost: values[9] ? parseInt(values[9]) : null,
-      reg: values[10] ? parseInt(values[10]) : null,
-      gpa_krav: values[11] || '—',
-      spraakkrav: values[12] || '—',
-      max_terminer: values[13] || '—',
-      kontakt: values[14] || '',
-      anteckningar: values[15] || '',
-      match: null // Kan inte beräknas utan matchningslogik, så satt till null
-    };
-    
-    unis.push(uni);
+  if (lines.length < 2) {
+    console.log('ERROR: Mindre än 2 rader!');
+    return [];
   }
   
-  console.log('Parsed universities:', unis); // Debug
+  const headers = lines[0].split('\t');
+  console.log('Headers:', headers);
+  
+  const unis = [];
+  
+  for (let i = 1; i < Math.min(lines.length, 5); i++) { // Bara första 5 för debug
+    const values = lines[i].split('\t');
+    console.log(`Row ${i}:`, values);
+    
+    if (values.length < 3 || !values[0]) continue;
+    
+    unis.push({
+      id: values[0],
+      name: values[1] || 'Okänt',
+      country: values[2] || 'Okänt',
+      city: values[3] || 'Okänt',
+      url: values[4] || '#'
+    });
+  }
+  
+  console.log('=== PARSING DONE ===');
+  console.log('Parsed unis:', unis);
   return unis;
 }
 
-// Hämta och uppdatera data från Google Sheets
+// Hämta data
 async function fetchAndUpdateData() {
+  console.log('Fetching from:', CSV_URL);
+  
   try {
-    // Lägg till CORS proxy för att undvika blockering
-    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-    const response = await fetch(proxyUrl + CSV_URL);
-    if (!response.ok) throw new Error('Kunde inte hämta data: ' + response.status);
+    const response = await fetch(CSV_URL);
+    console.log('Response status:', response.status);
+    console.log('Response ok:', response.ok);
+    
+    if (!response.ok) throw new Error('HTTP ' + response.status);
     
     const csvText = await response.text();
-    console.log('CSV laddat:', csvText.substring(0, 200)); // Visa första 200 tecken
+    console.log('Got CSV data, length:', csvText.length);
+    
     universities = parseCSVToUniversities(csvText);
+    console.log('Final universities array:', universities);
     
-    // Uppdatera UI
-    updateDividerLabel();
-    updateLastSync();
+    document.getElementById('divider-label').textContent = universities.length + ' lärosäten';
     
-    // Om en sökning redan har gjorts, uppdatera resultaten
-    if (searched) {
-      runSearch();
-    }
   } catch (error) {
-    console.error('Fel vid hämtning av data:', error);
-    document.getElementById('divider-label').textContent = 'Fel vid hämtning av data — ' + error.message;
+    console.error('ERROR:', error);
+    document.getElementById('divider-label').textContent = 'ERROR: ' + error.message;
   }
 }
 
-function updateDividerLabel() {
-  document.getElementById('divider-label').textContent = universities.length + ' lärosäten i databasen';
-}
-
-function updateLastSync() {
-  const now = new Date();
-  const timeStr = now.toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' });
-  document.getElementById('last-sync').textContent = 'uppdaterad ' + timeStr;
-}
-
-function badgeClass(m) {
-  if (m === null) return 'badge-low';
-  if (m >= 80) return 'badge-high';
-  if (m >= 65) return 'badge-mid';
-  return 'badge-low';
-}
-
-function fillClass(m) {
-  if (m === null) return 'fill-low';
-  if (m >= 80) return 'fill-high';
-  if (m >= 65) return 'fill-mid';
-  return 'fill-low';
-}
-
-function fmtCost(c) {
-  if (c === null || c === undefined) return 'Okänt';
-  if (c === 0) return 'Gratis';
-  return '€' + c.toLocaleString('sv-SE') + ' / år';
-}
-
-function renderCard(u, delay) {
-  const matchLabel = u.match !== null ? u.match + '% matchning' : 'Ej beräknad';
-  const matchWidth = u.match !== null ? u.match : 20;
-  
-  return `
-    <div class="uni-card" style="animation-delay:${delay}s">
-      <div class="card-top">
-        <div>
-          <div class="uni-name">${u.name}</div>
-          <div class="uni-city">${u.city}, ${u.country}</div>
-        </div>
-        <span class="match-badge ${badgeClass(u.match)}">${matchLabel}</span>
-      </div>
-      <div class="match-row">
-        <div class="match-bar"><div class="match-fill ${fillClass(u.match)}" style="width:${matchWidth}%"></div></div>
-        <span class="match-pct">${u.match !== null ? u.match + '%' : '—'}</span>
-      </div>
-      <div class="card-meta">
-        <div class="meta-item">
-          <span class="meta-label">Avgift</span>
-          <span class="meta-val">${fmtCost(u.cost)}</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label">Språk</span>
-          <span class="meta-val">${u.lang}</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label">Deadline HT</span>
-          <span class="meta-val">${u.deadline_ht}</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label">Språkkrav</span>
-          <span class="meta-val">${u.spraakkrav}</span>
-        </div>
-      </div>
-      ${u.anteckningar ? `<p style="margin-top:1rem;font-size:0.9rem;color:var(--text-muted);font-style:italic;">${u.anteckningar}</p>` : ''}
-      <a class="card-link" href="${u.url}" target="_blank">Besök universitetet →</a>
-    </div>`;
-}
-
-function applyFilter(list) {
-  if (currentFilter === 'nl')   return list.filter(u => u.country === 'Nederländerna');
-  if (currentFilter === 'fi')   return list.filter(u => u.country === 'Finland');
-  if (currentFilter === 'free') return list.filter(u => u.cost === 0);
-  return list;
-}
-
-function runSearch() {
-  searched = true;
-  const country = document.getElementById('sel-country').value;
-  const lang    = document.getElementById('sel-lang').value;
-
-  let list = [...universities];
-  if (country !== 'all') list = list.filter(u => u.country === country);
-  if (lang !== 'all')    list = list.filter(u => u.lang.includes(lang));
-
-  list.sort((a, b) => (b.match ?? -1) - (a.match ?? -1));
-
-  document.getElementById('results-header').style.display = 'flex';
-  document.getElementById('filters').style.display = 'flex';
-  document.getElementById('results-title').textContent = 'Kompatibla universitet';
-
-  window._searchResult = list;
-  renderList(list);
-}
-
-function renderList(list) {
-  const filtered = applyFilter(list);
-  document.getElementById('results-count').textContent = filtered.length + ' lärosäten';
-  const el = document.getElementById('uni-list');
-  if (!filtered.length) {
-    el.innerHTML = '<div class="empty">Inga resultat – prova andra filter.</div>';
-    return;
-  }
-  el.innerHTML = filtered.map((u, i) => renderCard(u, i * 0.07)).join('');
-}
-
-function setFilter(btn, type) {
-  currentFilter = type;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  if (window._searchResult) renderList(window._searchResult);
-}
-
-// Initialisera - hämta data vid start
+// Starta
+console.log('Script loaded');
 fetchAndUpdateData();
-
-// Uppdatera data var 5:e minut automatiskt
-setInterval(fetchAndUpdateData, REFRESH_INTERVAL);
 </script>
 </body>
 </html>
