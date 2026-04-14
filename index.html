@@ -583,8 +583,34 @@ function parseCSVToUniversities(csvText) {
     unis.push(uni);
   }
   
-  console.log('Parsed universities:', unis);
   return unis;
+}
+
+// Uppdatera dropdown för länder dynamiskt
+function updateCountryDropdown() {
+  const countries = [...new Set(universities.map(u => u.country))].sort();
+  const select = document.getElementById('sel-country');
+  
+  // Spara värdet som var valt
+  const currentValue = select.value;
+  
+  // Rensa och lägg till "Alla länder"
+  select.innerHTML = '<option value="all">Alla länder</option>';
+  
+  // Lägg till alla länder från databasen
+  countries.forEach(country => {
+    if (country) {
+      const option = document.createElement('option');
+      option.value = country;
+      option.textContent = country;
+      select.appendChild(option);
+    }
+  });
+  
+  // Återställ värdet om det finns
+  if (currentValue !== 'all' && countries.includes(currentValue)) {
+    select.value = currentValue;
+  }
 }
 
 async function fetchAndUpdateData() {
@@ -595,6 +621,7 @@ async function fetchAndUpdateData() {
     const csvText = await response.text();
     universities = parseCSVToUniversities(csvText);
     
+    updateCountryDropdown(); // NYTT: Uppdatera dropdowns
     updateDividerLabel();
     updateLastSync();
     
@@ -631,10 +658,11 @@ function fillClass(m) {
   return 'fill-low';
 }
 
+// ÄNDRAT: "/ år" → "/ termin"
 function fmtCost(c) {
   if (c === null || c === undefined) return 'Okänt';
   if (c === 0) return 'Gratis';
-  return '€' + c.toLocaleString('sv-SE') + ' / år';
+  return '€' + c.toLocaleString('sv-SE') + ' / termin';
 }
 
 function renderCard(u, delay) {
