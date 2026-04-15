@@ -540,22 +540,39 @@ function renderCard(u) {
 }
 
 function runSearch() {
-searched = true;
-const btn = document.getElementById('search-btn');
-btn.innerHTML = '<span class="loading-spinner"></span> Searching...';
+    searched = true;
+    const btn = document.getElementById('search-btn');
+    btn.innerHTML = '<span class="loading-spinner"></span> Searching...';
 
-setTimeout(() => {
-const prog = document.getElementById('sel-subject').value.toLowerCase();
-const country = document.getElementById('sel-country').value;
-const lang = document.getElementById('sel-lang').value.toLowerCase();
+    setTimeout(() => {
+        // 1. Hämta värden från sökfälten
+        const prog = document.getElementById('sel-subject').value.toLowerCase();
+        const country = document.getElementById('sel-country').value;
+        const lang = document.getElementById('sel-lang').value.toLowerCase();
 
-document.getElementById('results-header').style.display = 'flex';
-document.getElementById('filters').style.display = 'flex';
-window._searchResult = list;
-renderList(list);
+        // 2. Skapa filtrerad lista (Detta är delen som saknades!)
+        let list = universities.filter(u => {
+            const matchProg = prog === 'all' || u.subjects.includes(prog);
+            const matchCountry = country === 'all' || u.country === country;
+            const matchLang = lang === 'all' || u.lang.toLowerCase().includes(lang);
+            return matchProg && matchCountry && matchLang;
+        });
 
-btn.innerHTML = 'Search Universities →';
-}, 400);
+        // 3. Sortera alfabetiskt som standard
+        list.sort((a, b) => a.name.localeCompare(b.name));
+
+        // 4. Uppdatera gränssnittet
+        document.getElementById('results-header').style.display = 'flex';
+        document.getElementById('filters').style.display = 'flex';
+        
+        // Spara resultatet globalt för filter-knapparna (Cheapest/GPA)
+        window._searchResult = list;
+        
+        // Skicka listan till render-funktionen
+        renderList(list);
+
+        btn.innerHTML = 'Search Universities →';
+    }, 400);
 }
 
 function renderList(list) {
