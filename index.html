@@ -86,6 +86,9 @@
     opacity: 0;
   }
   h1 em { font-style: italic; color: var(--accent); }
+ .char {
+  display: inline-block;
+}
   .hero-sub {
     font-size: 1.05rem;
     color: var(--text-muted);
@@ -396,9 +399,7 @@ window.addEventListener('load', () => {
     });
   });
 });
-.char {
-  display: inline-block;
-}
+
 // Spring-animera kort när de renderas
 function animateCards() {
   document.querySelectorAll('.uni-card').forEach((card, i) => {
