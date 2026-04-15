@@ -564,25 +564,32 @@ function setFilter(btn, type) {
 
 fetchAndUpdateData();
 setInterval(fetchAndUpdateData, REFRESH_INTERVAL);
-import { animate, stagger, splitText } from 'animejs';
+// TEXT ANIMATION (SAFE VERSION)
+window.addEventListener('load', () => {
+  const el = document.querySelector('.animated-text');
+  if (!el) return;
 
-const { chars } = splitText('h2', { words: false, chars: true });
+  const text = el.textContent;
+  el.innerHTML = text
+    .split('')
+    .map(c => `<span class="char">${c}</span>`)
+    .join('');
 
-animate(chars, {
-  // Property keyframes
-  y: [
-    { to: '-2.75rem', ease: 'outExpo', duration: 600 },
-    { to: 0, ease: 'outBounce', duration: 800, delay: 100 }
-  ],
-  // Property specific parameters
-  rotate: {
-    from: '-1turn',
-    delay: 0
-  },
-  delay: stagger(50),
-  ease: 'inOutCirc',
-  loopDelay: 1000,
-  loop: true
+  anime({
+    targets: '.char',
+    translateY: [
+      { value: '-2.75rem', duration: 600, easing: 'easeOutExpo' },
+      { value: 0, duration: 800, delay: 100, easing: 'easeOutBounce' }
+    ],
+    rotate: {
+      value: '1turn',
+      delay: 0
+    },
+    delay: anime.stagger(50),
+    easing: 'easeInOutCirc',
+    loop: true,
+    loopDelay: 1000
+  });
 });
 </script>
 </body>
