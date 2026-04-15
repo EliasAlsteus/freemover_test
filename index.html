@@ -382,7 +382,7 @@ Find your <em>perfect</em><br>
 <div class="search-grid-3">
     <div class="field">
         <label>Continent</label>
-        <select id="sel-continent">
+        <select id="sel-continent" onchange="updateCountryDropdown()">
             <option value="all">All Continents</option>
         </select>
     </div>
@@ -480,18 +480,8 @@ function parseCSVToUniversities(csvText) {
     }));
 }
 
+// Körs en gång när datan har hämtats för att fylla Världsdelar
 function updateDropdowns() {
-    // Uppdatera Länder
-    const countries = [...new Set(universities.map(u => u.country))].filter(Boolean).sort();
-    const cSelect = document.getElementById('sel-country');
-    cSelect.innerHTML = '<option value="all">All Countries</option>';
-    countries.forEach(c => {
-        const opt = document.createElement('option');
-        opt.value = opt.textContent = c;
-        cSelect.appendChild(opt);
-    });
-
-    // Uppdatera Continents
     const continents = [...new Set(universities.map(u => u.continent))].filter(Boolean).sort();
     const contSelect = document.getElementById('sel-continent');
     contSelect.innerHTML = '<option value="all">All Continents</option>';
@@ -500,8 +490,33 @@ function updateDropdowns() {
         opt.value = opt.textContent = c;
         contSelect.appendChild(opt);
     });
+    
+    // Initiera land-listan (visa alla länder från början)
+    updateCountryDropdown();
 }
 
+// Körs varje gång man byter världsdel
+function updateCountryDropdown() {
+    const selectedContinent = document.getElementById('sel-continent').value;
+    const cSelect = document.getElementById('sel-country');
+    
+    // Filtrera universiteten baserat på vald världsdel
+    let filteredUnis = universities;
+    if (selectedContinent !== 'all') {
+        filteredUnis = universities.filter(u => u.continent === selectedContinent);
+    }
+    
+    // Hämta unika länder från de filtrerade universiteten
+    const countries = [...new Set(filteredUnis.map(u => u.country))].filter(Boolean).sort();
+    
+    // Uppdatera listan
+    cSelect.innerHTML = '<option value="all">All Countries</option>';
+    countries.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = opt.textContent = c;
+        cSelect.appendChild(opt);
+    });
+}
 // Kom ihåg att anropa updateDropdowns() istället för updateCountryDropdown() 
 // inuti fetchAndUpdateData()
 
