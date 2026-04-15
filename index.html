@@ -207,15 +207,32 @@ color: var(--text-muted);
 }
 
 .field select {
-background: transparent;
-border: none;
-color: var(--text);
-font-family: 'EB Garamond', Georgia, serif;
-font-size: 16px;
-outline: none;
-cursor: pointer;
-appearance: none;
--webkit-appearance: none;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 16px;
+    outline: none;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+}
+
+/* Denna fixar färgerna inuti själva listan när man klickar */
+.field select option {
+    background-color: #2a2a2a; /* Samma som din bakgrund */
+    color: #f0ece4;            /* Samma som din text */
+    padding: 10px;
+}
+
+/* Fix för optgroup (kategorierna som Engineering, Business etc) */
+.field select optgroup {
+    background-color: #2a2a2a;
+    color: var(--accent);      /* Gör kategorinamnen guldfärgade/accent */
+    font-style: normal;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
 }
 
 .search-btn {
@@ -485,27 +502,35 @@ function fillClass(m) { return m >= 80 ? 'fill-high' : m >= 65 ? 'fill-mid' : 'f
 function fmtCost(c) { return c ? '€' + c.toLocaleString() : '—'; }
 
 function renderCard(u) {
-const matchVal = u.match || Math.floor(Math.random() * 30) + 40; // Simulerad match om exakt saknas
-return `
-<div class="uni-card">
-<div class="card-top">
-<div>
-<div class="uni-name">${u.name}</div>
-<div class="uni-city">${u.city}, ${u.country}</div>
-</div>
-<span class="match-badge ${badgeClass(matchVal)}">${matchVal}% match</span>
-</div>
-<div class="match-row">
-<div class="match-bar"><div class="match-fill ${fillClass(matchVal)}" style="width:${matchVal}%"></div></div>
-</div>
-<div class="card-meta">
-<div class="meta-item"><span class="meta-label">Tuition (EU)</span><span class="meta-val">${fmtCost(u.cost_eu)}</span></div>
-<div class="meta-item"><span class="meta-label">Tuition (Non-EU)</span><span class="meta-val">${fmtCost(u.cost_non_eu)}</span></div>
-<div class="meta-item"><span class="meta-label">Deadline HT</span><span class="meta-val">${u.deadline_ht}</span></div>
-<div class="meta-item"><span class="meta-label">GPA Requirement</span><span class="meta-val">${u.gpa_krav}</span></div>
-</div>
-<a class="card-link" href="${u.url}" target="_blank">Visit University →</a>
-</div>`;
+    return `
+    <div class="uni-card">
+        <div class="card-top">
+            <div>
+                <div class="uni-name">${u.name}</div>
+                <div class="uni-city">${u.city}, ${u.country}</div>
+            </div>
+        </div>
+        <div class="card-meta">
+            <div class="meta-item">
+                <span class="meta-label">Tuition (EU)</span>
+                <span class="meta-val">${fmtCost(u.cost_eu)}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Tuition (Non-EU)</span>
+                <span class="meta-val">${fmtCost(u.cost_non_eu)}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Deadline HT</span>
+                <span class="meta-val">${u.deadline_ht}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">GPA Requirement</span>
+                <span class="meta-val">${u.gpa_krav}</span>
+            </div>
+        </div>
+        ${u.anteckningar ? `<p style="margin-top:1rem; font-size:0.9rem; color:var(--text-muted); font-style:italic;">${u.anteckningar}</p>` : ''}
+        <a class="card-link" href="${u.url}" target="_blank">Visit University →</a>
+    </div>`;
 }
 
 function runSearch() {
@@ -517,13 +542,6 @@ setTimeout(() => {
 const prog = document.getElementById('sel-subject').value.toLowerCase();
 const country = document.getElementById('sel-country').value;
 const lang = document.getElementById('sel-lang').value.toLowerCase();
-
-let list = universities.filter(u => {
-const matchProg = prog === 'all' || u.subjects.includes(prog);
-const matchCountry = country === 'all' || u.country === country;
-const matchLang = lang === 'all' || u.lang.toLowerCase().includes(lang);
-return matchProg && matchCountry && matchLang;
-});
 
 document.getElementById('results-header').style.display = 'flex';
 document.getElementById('filters').style.display = 'flex';
