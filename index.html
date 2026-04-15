@@ -292,7 +292,8 @@ border-radius: 2px;
 border: 0.5px solid var(--border);
 border-radius: 4px;
 padding: 1.75rem 2rem;
-margin-bottom: 1px;
+margin-bottom: 2rem;
+transition: transform 0.2s ease; /* Bonus: gör att det känns lite mer levande */
 background: var(--bg-card);
 opacity: 0;
 }
@@ -605,6 +606,11 @@ function runSearch() {
         renderList(list);
 
         btn.innerHTML = 'Search Universities →';
+        // NYTT: Scrolla ner till resultaten
+        document.getElementById('results-header').scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+        });
     }, 400);
 }
 function renderList(list) {
