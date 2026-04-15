@@ -66,7 +66,6 @@ animation: tagFadeIn 0.8s ease-out 0.2s forwards;
 opacity: 0;
 }
 
-/* HERO ANIMATIONS */
 .hero {
 max-width: 820px;
 margin: 0 auto;
@@ -121,6 +120,20 @@ opacity: 0;
 animation: fadeInUp 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s forwards;
 }
 
+.hero-info {
+font-size: 0.95rem;
+color: var(--text-dim);
+max-width: 480px;
+line-height: 1.6;
+margin-top: 1rem;
+padding: 1rem;
+background: rgba(200,184,154,0.05);
+border-left: 2px solid var(--accent);
+border-radius: 2px;
+opacity: 0;
+animation: fadeInUp 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.75s forwards;
+}
+
 .animated-text {
 display: inline;
 position: relative;
@@ -153,7 +166,6 @@ animation: charBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 .char:nth-child(19) { animation-delay: 1.65s; }
 .char:nth-child(20) { animation-delay: 1.7s; }
 
-/* ANIMATIONS */
 @keyframes logoSlideIn {
   from {
     opacity: 0;
@@ -207,6 +219,11 @@ animation: charBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     opacity: 1;
     width: 100%;
   }
+}
+
+@keyframes skeleton {
+  0%, 100% { background-color: var(--bg-card); }
+  50% { background-color: rgba(255,255,255,0.05); }
 }
 
 .search-section {
@@ -276,8 +293,13 @@ cursor: pointer;
 border-radius: 0 0 4px 4px;
 transition: background 0.2s;
 margin-top: 1px;
+position: relative;
 }
 .search-btn:hover { background: var(--accent); }
+.search-btn.loading {
+opacity: 0.7;
+pointer-events: none;
+}
 
 .divider {
 max-width: 820px;
@@ -385,7 +407,49 @@ transition: border-color 0.15s;
 }
 .card-link:hover { border-color: var(--accent); }
 
-.empty { text-align: center; padding: 4rem 1rem; color: var(--text-muted); font-style: italic; }
+.empty {
+text-align: center;
+padding: 4rem 2rem;
+color: var(--text-muted);
+}
+
+.empty-title {
+font-size: 1.25rem;
+color: var(--text);
+margin-bottom: 0.75rem;
+font-weight: 500;
+}
+
+.empty-text {
+font-style: italic;
+margin-bottom: 1.5rem;
+line-height: 1.6;
+}
+
+.empty-suggestion {
+font-size: 0.95rem;
+color: var(--accent);
+background: rgba(200,184,154,0.05);
+padding: 1rem;
+border-radius: 2px;
+border-left: 2px solid var(--accent);
+text-align: left;
+display: inline-block;
+}
+
+.loading-spinner {
+display: inline-block;
+width: 16px;
+height: 16px;
+border: 2px solid rgba(240,236,228,0.2);
+border-top-color: var(--text);
+border-radius: 50%;
+animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 
 footer {
 border-top: 0.5px solid var(--border);
@@ -408,6 +472,7 @@ nav { padding: 1.5rem; }
 .card-top { flex-direction: column; }
 .card-meta { gap: 1.25rem; }
 footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+.empty-suggestion { text-align: center; }
 }
 </style>
 </head>
@@ -425,6 +490,9 @@ Find your <em>perfect</em><br>
 <span class="animated-text">exchange university</span>
 </h1>
 <p class="hero-sub">See which universities match your degree — without browsing hundreds of websites.</p>
+<div class="hero-info">
+<strong>About this tool:</strong> UniMatchr helps you discover and navigate freemover opportunities worldwide. Explore, apply, and go beyond the standard exchange.
+</div>
 </section>
 
 <section class="search-section">
@@ -469,7 +537,7 @@ Find your <em>perfect</em><br>
 </select>
 </div>
 </div>
-<button class="search-btn" onclick="runSearch()">Search Compatible Universities →</button>
+<button class="search-btn" id="search-btn" onclick="runSearch()">Search Compatible Universities →</button>
 </section>
 
 <div class="divider">
@@ -492,7 +560,7 @@ Find your <em>perfect</em><br>
 </section>
 
 <footer>
-<span>UniMatchr © 2026</span>
+<span>UniMatchr © 2025</span>
 <span>Data updated from Google Sheets — <span id="last-sync">loading...</span></span>
 </footer>
 
@@ -542,7 +610,7 @@ lang: values[5] || 'English',
 freemover: values[6] || 'Unknown',
 deadline_ht: values[7] || '—',
 deadline_vt: values[8] || '—',
-cost: values[9] ? parseInt(values[9]) : null,
+cost_non_eu: values[9] ? parseInt(values[9]) : null,
 cost_eu: values[10] ? parseInt(values[10]) : null,
 reg: values[11] ? parseInt(values[11]) : null,
 gpa_krav: values[12] || '—',
@@ -590,17 +658,32 @@ function badgeClass(m) { return m === null ? 'badge-low' : m >= 80 ? 'badge-high
 function fillClass(m)  { return m === null ? 'fill-low'  : m >= 80 ? 'fill-high'  : m >= 65 ? 'fill-mid'  : 'fill-low'; }
 
 function fmtCost(c) {
-if (c === null || c === undefined) return 'Unknown';
+if (c === null || c === undefined) return '—';
 if (c === 0) return 'Free';
-return '€' + c.toLocaleString('en-US') + ' / term';
+return '€' + c.toLocaleString('en-US');
 }
 
 function renderCard(u) {
 const matchLabel = u.match !== null ? u.match + '% match' : 'Not calculated';
 const matchWidth = u.match !== null ? u.match : 20;
 
-// Visa kostnader - prioritera EU-kostnad om den finns
-const tuitionDisplay = u.cost_eu !== null ? fmtCost(u.cost_eu) + ' (EU)' : fmtCost(u.cost);
+// Visa båda EU och Non-EU kostnader
+let tuitionDisplay = '';
+if (u.cost_eu !== null || u.cost_non_eu !== null) {
+const eu = fmtCost(u.cost_eu);
+const nonEu = fmtCost(u.cost_non_eu);
+if (eu === '—' && nonEu !== '—') {
+tuitionDisplay = nonEu + ' / term';
+} else if (nonEu === '—' && eu !== '—') {
+tuitionDisplay = eu + ' / term (EU)';
+} else if (eu !== '—' && nonEu !== '—') {
+tuitionDisplay = nonEu + ' / term (Non-EU) · ' + eu + ' / term (EU)';
+} else {
+tuitionDisplay = 'Check university';
+}
+} else {
+tuitionDisplay = 'Check university';
+}
 
 return `
    <div class="uni-card">
@@ -629,8 +712,8 @@ return `
 function applyFilter(list) {
 if (currentFilter === 'cheapest') {
 return [...list].sort((a, b) => {
-const costA = a.cost_eu ?? a.cost ?? Infinity;
-const costB = b.cost_eu ?? b.cost ?? Infinity;
+const costA = a.cost_eu ?? a.cost_non_eu ?? Infinity;
+const costB = b.cost_eu ?? b.cost_non_eu ?? Infinity;
 return costA - costB;
 });
 }
@@ -640,24 +723,49 @@ return list;
 
 function runSearch() {
 searched = true;
+const btn = document.getElementById('search-btn');
+btn.classList.add('loading');
+btn.innerHTML = '<span class="loading-spinner"></span> Searching...';
+
+setTimeout(() => {
 const country = document.getElementById('sel-country').value;
-const lang    = document.getElementById('sel-lang').value;
+const lang = document.getElementById('sel-lang').value;
 let list = [...universities];
 if (country !== 'all') list = list.filter(u => u.country === country);
-if (lang !== 'all')    list = list.filter(u => u.lang.includes(lang));
+if (lang !== 'all') list = list.filter(u => u.lang.includes(lang));
 list.sort((a, b) => (b.match ?? -1) - (a.match ?? -1));
+
 document.getElementById('results-header').style.display = 'flex';
 document.getElementById('filters').style.display = 'flex';
 document.getElementById('results-title').textContent = 'Compatible Universities';
 window._searchResult = list;
 renderList(list);
+
+btn.classList.remove('loading');
+btn.innerHTML = 'Search Compatible Universities →';
+}, 300);
 }
 
 function renderList(list) {
 const filtered = applyFilter(list);
 document.getElementById('results-count').textContent = filtered.length + ' universities';
 const el = document.getElementById('uni-list');
-if (!filtered.length) { el.innerHTML = '<div class="empty">No results — try different filters.</div>'; return; }
+
+if (!filtered.length) {
+el.innerHTML = `
+<div class="empty">
+<div class="empty-title">No matches found</div>
+<div class="empty-text">We couldn't find any universities matching your filters.</div>
+<div class="empty-suggestion">
+<strong>Try:</strong><br>
+• Removing language filters<br>
+• Searching all countries instead<br>
+• Checking back soon for new additions
+</div>
+</div>`;
+return;
+}
+
 el.innerHTML = filtered.map(u => renderCard(u)).join('');
 animateCards();
 }
@@ -676,7 +784,6 @@ btn.classList.add('active');
 if (window._searchResult) renderList(window._searchResult);
 }
 
-// Split animated text into characters
 window.addEventListener('DOMContentLoaded', () => {
   const el = document.querySelector('.animated-text');
   if (el) {
