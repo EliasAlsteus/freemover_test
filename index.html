@@ -492,7 +492,7 @@ Find your <em>perfect</em><br>
 </section>
 
 <footer>
-<span>UniMatchr © 2025</span>
+<span>UniMatchr © 2026</span>
 <span>Data updated from Google Sheets — <span id="last-sync">loading...</span></span>
 </footer>
 
@@ -533,16 +533,24 @@ function parseCSVToUniversities(csvText) {
 const rows = parseCSV(csvText);
 if (rows.length < 2) return [];
 return rows.slice(1).filter(v => v.length >= 3 && v[0]).map(values => ({
-id: values[0], name: values[1] || 'Unknown University',
-country: values[2] || 'Unknown Country', city: values[3] || 'Unknown City',
-url: values[4] || '#', lang: values[5] || 'English',
-freemover: values[6] || 'Unknown', deadline_ht: values[7] || '—',
+id: values[0],
+name: values[1] || 'Unknown University',
+country: values[2] || 'Unknown Country',
+city: values[3] || 'Unknown City',
+url: values[4] || '#',
+lang: values[5] || 'English',
+freemover: values[6] || 'Unknown',
+deadline_ht: values[7] || '—',
 deadline_vt: values[8] || '—',
 cost: values[9] ? parseInt(values[9]) : null,
-reg: values[10] ? parseInt(values[10]) : null,
-gpa_krav: values[11] || '—', spraakkrav: values[12] || '—',
-max_terminer: values[13] || '—', kontakt: values[14] || '',
-anteckningar: values[15] || '', match: null
+cost_eu: values[10] ? parseInt(values[10]) : null,
+reg: values[11] ? parseInt(values[11]) : null,
+gpa_krav: values[12] || '—',
+spraakkrav: values[13] || '—',
+max_terminer: values[14] || '—',
+kontakt: values[15] || '',
+anteckningar: values[16] || '',
+match: null
 }));
 }
 
@@ -580,6 +588,7 @@ document.getElementById('divider-label').textContent = 'Error fetching data';
 
 function badgeClass(m) { return m === null ? 'badge-low' : m >= 80 ? 'badge-high' : m >= 65 ? 'badge-mid' : 'badge-low'; }
 function fillClass(m)  { return m === null ? 'fill-low'  : m >= 80 ? 'fill-high'  : m >= 65 ? 'fill-mid'  : 'fill-low'; }
+
 function fmtCost(c) {
 if (c === null || c === undefined) return 'Unknown';
 if (c === 0) return 'Free';
@@ -589,6 +598,10 @@ return '€' + c.toLocaleString('en-US') + ' / term';
 function renderCard(u) {
 const matchLabel = u.match !== null ? u.match + '% match' : 'Not calculated';
 const matchWidth = u.match !== null ? u.match : 20;
+
+// Visa kostnader - prioritera EU-kostnad om den finns
+const tuitionDisplay = u.cost_eu !== null ? fmtCost(u.cost_eu) + ' (EU)' : fmtCost(u.cost);
+
 return `
    <div class="uni-card">
      <div class="card-top">
@@ -603,7 +616,7 @@ return `
        <span class="match-pct">${u.match !== null ? u.match + '%' : '—'}</span>
      </div>
      <div class="card-meta">
-       <div class="meta-item"><span class="meta-label">Tuition</span><span class="meta-val">${fmtCost(u.cost)}</span></div>
+       <div class="meta-item"><span class="meta-label">Tuition</span><span class="meta-val">${tuitionDisplay}</span></div>
        <div class="meta-item"><span class="meta-label">Language</span><span class="meta-val">${u.lang}</span></div>
        <div class="meta-item"><span class="meta-label">Deadline Fall</span><span class="meta-val">${u.deadline_ht}</span></div>
        <div class="meta-item"><span class="meta-label">GPA Requirement</span><span class="meta-val">${u.gpa_krav}</span></div>
@@ -614,7 +627,13 @@ return `
 }
 
 function applyFilter(list) {
-if (currentFilter === 'cheapest') return [...list].sort((a, b) => (a.cost ?? Infinity) - (b.cost ?? Infinity));
+if (currentFilter === 'cheapest') {
+return [...list].sort((a, b) => {
+const costA = a.cost_eu ?? a.cost ?? Infinity;
+const costB = b.cost_eu ?? b.cost ?? Infinity;
+return costA - costB;
+});
+}
 if (currentFilter === 'gpa') return list.filter(u => u.gpa_krav && u.gpa_krav !== '—');
 return list;
 }
