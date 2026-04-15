@@ -380,25 +380,25 @@ Find your <em>perfect</em><br>
 </div>
 </div>
 <div class="search-grid-3">
-<div class="field">
-<label>Country</label>
-<select id="sel-country"><option value="all">All Countries</option></select>
-</div>
-<div class="field">
-<label>Semester</label>
-<select id="sel-term">
-<option value="all">Any Semester</option>
-<option value="Fall">Fall (HT)</option>
-<option value="Spring">Spring (VT)</option>
-</select>
-</div>
-<div class="field">
-<label>Language</label>
-<select id="sel-lang">
-<option value="all">All</option>
-<option value="English">English</option>
-</select>
-</div>
+    <div class="field">
+        <label>Continent</label>
+        <select id="sel-continent">
+            <option value="all">All Continents</option>
+        </select>
+    </div>
+    <div class="field">
+        <label>Country</label>
+        <select id="sel-country">
+            <option value="all">All Countries</option>
+        </select>
+    </div>
+    <div class="field">
+        <label>Language</label>
+        <select id="sel-lang">
+            <option value="all">All</option>
+            <option value="English">English</option>
+        </select>
+    </div>
 </div>
 <button class="search-btn" id="search-btn" onclick="runSearch()">Search Universities →</button>
 </section>
@@ -460,46 +460,66 @@ return rows;
 }
 
 function parseCSVToUniversities(csvText) {
-const rows = parseCSV(csvText);
-if (rows.length < 2) return [];
-return rows.slice(1).filter(v => v.length >= 3 && v[1]).map(v => ({
-id: v[0],
-name: v[1],
-country: v[2],
-city: v[3],
-url: v[4],
-lang: v[5],
-deadline_ht: v[7] || '—',
-deadline_vt: v[8] || '—',
-cost_non_eu: v[9] ? parseInt(v[9].replace(/[^0-9]/g, '')) : null,
-cost_eu: v[10] ? parseInt(v[10].replace(/[^0-9]/g, '')) : null,
-gpa_krav: v[12] || '—',
-anteckningar: v[16] || '',
-subjects: v[17] ? v[17].toLowerCase() : '',
-match: null
-}));
+    const rows = parseCSV(csvText);
+    if (rows.length < 2) return [];
+    return rows.slice(1).filter(v => v.length >= 3 && v[1]).map(v => ({
+        id: v[0],
+        name: v[1],
+        country: v[2],
+        city: v[3],
+        url: v[4],
+        lang: v[5],
+        deadline_ht: v[7] || '—', // Motsvarar Fall
+        deadline_vt: v[8] || '—', // Motsvarar Spring
+        cost_non_eu: v[9] ? parseInt(v[9].replace(/[^0-9]/g, '')) : null,
+        cost_eu: v[10] ? parseInt(v[10].replace(/[^0-9]/g, '')) : null,
+        gpa_krav: v[12] || '—',
+        anteckningar: v[16] || '',
+        subjects: v[17] ? v[17].toLowerCase() : '',
+        continent: v[18] || '' // Hämtar från kolumn S
+    }));
 }
 
-function updateCountryDropdown() {
-const countries = [...new Set(universities.map(u => u.country))].sort();
-const select = document.getElementById('sel-country');
-select.innerHTML = '<option value="all">All Countries</option>';
-countries.forEach(c => {
-const opt = document.createElement('option');
-opt.value = opt.textContent = c;
-select.appendChild(opt);
-});
+function updateDropdowns() {
+    // Uppdatera Länder
+    const countries = [...new Set(universities.map(u => u.country))].filter(Boolean).sort();
+    const cSelect = document.getElementById('sel-country');
+    cSelect.innerHTML = '<option value="all">All Countries</option>';
+    countries.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = opt.textContent = c;
+        cSelect.appendChild(opt);
+    });
+
+    // Uppdatera Continents
+    const continents = [...new Set(universities.map(u => u.continent))].filter(Boolean).sort();
+    const contSelect = document.getElementById('sel-continent');
+    contSelect.innerHTML = '<option value="all">All Continents</option>';
+    continents.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = opt.textContent = c;
+        contSelect.appendChild(opt);
+    });
 }
+
+// Kom ihåg att anropa updateDropdowns() istället för updateCountryDropdown() 
+// inuti fetchAndUpdateData()
 
 async function fetchAndUpdateData() {
-try {
-const response = await fetch(CSV_URL);
-const csvText = await response.text();
-universities = parseCSVToUniversities(csvText);
-updateCountryDropdown();
-document.getElementById('divider-label').textContent = universities.length + ' universities available';
-document.getElementById('last-sync').textContent = new Date().toLocaleTimeString();
-} catch (e) { console.error(e); }
+    try {
+        const response = await fetch(CSV_URL);
+        const csvText = await response.text();
+        universities = parseCSVToUniversities(csvText);
+
+        // HÄR ÄR ÄNDRINGEN:
+        // Vi anropar den nya funktionen som fyller i både land och världsdel
+        updateDropdowns(); 
+
+        document.getElementById('divider-label').textContent = universities.length + ' universities available';
+        document.getElementById('last-sync').textContent = new Date().toLocaleTimeString();
+    } catch (e) { 
+        console.error("Kunde inte hämta data:", e); 
+    }
 }
 
 function badgeClass(m) { return m >= 80 ? 'badge-high' : m >= 65 ? 'badge-mid' : 'badge-low'; }
@@ -526,8 +546,12 @@ function renderCard(u) {
                 <span class="meta-val">${fmtCost(u.cost_non_eu)}</span>
             </div>
             <div class="meta-item">
-                <span class="meta-label">Deadline HT</span>
+                <span class="meta-label">Deadline Fall</span>
                 <span class="meta-val">${u.deadline_ht}</span>
+            </div>
+            <div class="meta-item">
+                <span class="meta-label">Deadline Spring</span>
+                <span class="meta-val">${u.deadline_vt}</span>
             </div>
             <div class="meta-item">
                 <span class="meta-label">GPA Requirement</span>
@@ -545,36 +569,29 @@ function runSearch() {
     btn.innerHTML = '<span class="loading-spinner"></span> Searching...';
 
     setTimeout(() => {
-        // 1. Hämta värden från sökfälten
         const prog = document.getElementById('sel-subject').value.toLowerCase();
+        const continent = document.getElementById('sel-continent').value;
         const country = document.getElementById('sel-country').value;
         const lang = document.getElementById('sel-lang').value.toLowerCase();
 
-        // 2. Skapa filtrerad lista (Detta är delen som saknades!)
         let list = universities.filter(u => {
             const matchProg = prog === 'all' || u.subjects.includes(prog);
+            const matchCont = continent === 'all' || u.continent === continent;
             const matchCountry = country === 'all' || u.country === country;
             const matchLang = lang === 'all' || u.lang.toLowerCase().includes(lang);
-            return matchProg && matchCountry && matchLang;
+            return matchProg && matchCont && matchCountry && matchLang;
         });
 
-        // 3. Sortera alfabetiskt som standard
         list.sort((a, b) => a.name.localeCompare(b.name));
 
-        // 4. Uppdatera gränssnittet
         document.getElementById('results-header').style.display = 'flex';
         document.getElementById('filters').style.display = 'flex';
-        
-        // Spara resultatet globalt för filter-knapparna (Cheapest/GPA)
         window._searchResult = list;
-        
-        // Skicka listan till render-funktionen
         renderList(list);
 
         btn.innerHTML = 'Search Universities →';
     }, 400);
 }
-
 function renderList(list) {
 let filtered = [...list];
 if (currentFilter === 'cheapest') filtered.sort((a,b) => (a.cost_eu || 99999) - (b.cost_eu || 99999));
