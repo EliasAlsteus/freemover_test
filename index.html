@@ -128,13 +128,9 @@
             animation: fadeInUp 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.75s forwards;
         }
 
-        .animated-text { display: inline; position: relative; }
-        .char { display: inline-block; opacity: 0; animation: charBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
-
         @keyframes logoSlideIn { from { opacity: 0; transform: translateX(-30px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes tagFadeIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes charBounce { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
         /* --- SEARCH SECTION --- */
@@ -332,10 +328,7 @@
 
 <section class="hero">
   <p class="hero-label">For freemover students</p>
-  <h1>
-    Stop scrolling through<br>
-    <em>endless university lists</em>
-  </h1>
+  <h1>Stop scrolling through<br><em>endless university lists</em></h1>
   <p class="hero-sub">
     UniMatchr matches you with universities worldwide based on your degree —
     including freemover options your home university never told you about.
@@ -395,7 +388,6 @@
 <section class="featured-section">
   <div class="featured-label">Featured Universities</div>
   <div class="featured-grid">
- 
     <a href="https://www.unimelb.edu.au/" target="_blank" class="feat-item">
       <img src="images/melbourne.jpg" class="feat-img" alt="Melbourne">
       <div class="feat-overlay"></div>
@@ -404,7 +396,6 @@
         <div class="feat-city">Melbourne, Australia</div>
       </div>
     </a>
- 
     <a href="https://liu.se/en/" target="_blank" class="feat-item">
       <img src="images/linkoping.jpg" class="feat-img" alt="Linköping">
       <div class="feat-overlay"></div>
@@ -413,7 +404,6 @@
         <div class="feat-city">Linköping, Sweden</div>
       </div>
     </a>
- 
     <a href="https://www.su.ac.za/en" target="_blank" class="feat-item">
       <img src="images/stellenbosch.jpg" class="feat-img" alt="Stellenbosch">
       <div class="feat-overlay"></div>
@@ -422,7 +412,6 @@
         <div class="feat-city">Stellenbosch, South Africa</div>
       </div>
     </a>
- 
     <a href="https://www.ethz.ch/" target="_blank" class="feat-item">
       <img src="images/zurich.jpg" class="feat-img" alt="Zurich">
       <div class="feat-overlay"></div>
@@ -431,6 +420,7 @@
         <div class="feat-city">Zurich, Switzerland</div>
       </div>
     </a>
+  </div> </section>
 
 <div class="divider">
     <div class="divider-line"></div>
@@ -458,66 +448,35 @@
 
 <script>
 let universities = [];
-
 let currentFilter = 'all';
-
-let searched = false;
 
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTAa9qeWsvV_sYuZ5m8-2t-3N08Y2sN1_au0tEZqBYWzFRJP9NGLTxZKSN40y-Sq6HoDbWH-iO80bPT/pub?output=csv';
 
-
-
 function parseCSV(csvText) {
-
-const rows = [];
-
-let currentRow = [], currentField = '', insideQuotes = false;
-
-for (let i = 0; i < csvText.length; i++) {
-
-const char = csvText[i], nextChar = csvText[i + 1];
-
-if (char === '"') {
-
-if (insideQuotes && nextChar === '"') { currentField += '"'; i++; }
-
-else insideQuotes = !insideQuotes;
-
-} else if (char === ',' && !insideQuotes) {
-
-currentRow.push(currentField.trim()); currentField = '';
-
-} else if ((char === '\n' || char === '\r') && !insideQuotes) {
-
-if (currentField || currentRow.length > 0) {
-
-currentRow.push(currentField.trim());
-
-if (currentRow.some(f => f)) rows.push(currentRow);
-
-currentRow = []; currentField = '';
-
+    const rows = [];
+    let currentRow = [], currentField = '', insideQuotes = false;
+    for (let i = 0; i < csvText.length; i++) {
+        const char = csvText[i], nextChar = csvText[i + 1];
+        if (char === '"') {
+            if (insideQuotes && nextChar === '"') { currentField += '"'; i++; }
+            else insideQuotes = !insideQuotes;
+        } else if (char === ',' && !insideQuotes) {
+            currentRow.push(currentField.trim()); currentField = '';
+        } else if ((char === '\n' || char === '\r') && !insideQuotes) {
+            if (currentField || currentRow.length > 0) {
+                currentRow.push(currentField.trim());
+                if (currentRow.some(f => f)) rows.push(currentRow);
+                currentRow = []; currentField = '';
+            }
+            if (char === '\r' && nextChar === '\n') i++;
+        } else { currentField += char; }
+    }
+    if (currentField || currentRow.length > 0) {
+        currentRow.push(currentField.trim());
+        if (currentRow.some(f => f)) rows.push(currentRow);
+    }
+    return rows;
 }
-
-if (char === '\r' && nextChar === '\n') i++;
-
-} else { currentField += char; }
-
-}
-
-if (currentField || currentRow.length > 0) {
-
-currentRow.push(currentField.trim());
-
-if (currentRow.some(f => f)) rows.push(currentRow);
-
-}
-
-return rows;
-
-}
-
-
 
 function parseCSVToUniversities(csvText) {
     const rows = parseCSV(csvText);
@@ -536,7 +495,7 @@ function parseCSVToUniversities(csvText) {
         gpa_krav: v[12] || '—',
         anteckningar: v[16] || '',
         subjects: v[17] ? v[17].toLowerCase() : '',
-        continent: v[18] || ''
+        continent: v[18] || 'Other' // Se till att du har världsdel i kolumn 18 (S)
     }));
 }
 
@@ -573,7 +532,10 @@ async function fetchAndUpdateData() {
         updateDropdowns();
         document.getElementById('divider-label').textContent = universities.length + ' universities available';
         document.getElementById('last-sync').textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-    } catch (e) { console.error("Fetch error:", e); }
+    } catch (e) { 
+        console.error("Fetch error:", e); 
+        document.getElementById('divider-label').textContent = "Error loading data.";
+    }
 }
 
 function renderCard(u) {
@@ -587,12 +549,12 @@ function renderCard(u) {
             </div>
         </div>
         <div class="card-meta">
-            <div class="meta-item"><span class="meta-label">Tuition (EU)</span><span class="meta-val">{fmtCost(u.cost_eu)}</span></div>
-            <div class="meta-item"><span class="meta-label">Tuition (Non-EU)</span><span class="meta-val">{fmtCost(u.cost_non_eu)}</span></div>
-            <div class="meta-item"><span class="meta-label">GPA Requirement</span><span class="meta-val">{u.gpa_krav}</span></div>
-            <div class="meta-item"><span class="meta-label">Deadline HT</span><span class="meta-val">{u.deadline_ht}</span></div>
+            <div class="meta-item"><span class="meta-label">Tuition (EU)</span><span class="meta-val">${fmtCost(u.cost_eu)}</span></div>
+            <div class="meta-item"><span class="meta-label">Tuition (Non-EU)</span><span class="meta-val">${fmtCost(u.cost_non_eu)}</span></div>
+            <div class="meta-item"><span class="meta-label">GPA Requirement</span><span class="meta-val">${u.gpa_krav}</span></div>
+            <div class="meta-item"><span class="meta-label">Deadline HT</span><span class="meta-val">${u.deadline_ht}</span></div>
         </div>
-        {u.anteckningar ? `<p style="margin-top:1rem; font-size:0.9rem; color:var(--text-muted); font-style:italic;">${u.anteckningar}</p>` : ''}
+        ${u.anteckningar ? `<p style="margin-top:1rem; font-size:0.9rem; color:var(--text-muted); font-style:italic;">${u.anteckningar}</p>` : ''}
         <a class="card-link" href="${u.url}" target="_blank">Visit University →</a>
     </div>`;
 }
@@ -634,7 +596,7 @@ function renderList(list) {
 
     document.getElementById('results-count').textContent = filtered.length + ' universities';
     const el = document.getElementById('uni-list');
-    el.innerHTML = filtered.length ? filtered.map(u => renderCard(u)).join('') : '<div class="no-results"><p>No matches found.</p></div>';
+    el.innerHTML = filtered.length ? filtered.map(u => renderCard(u)).join('') : '<div class="no-results" style="padding:2rem; color:var(--text-muted);"><p>No matches found.</p></div>';
 
     document.querySelectorAll('.uni-card').forEach((card, i) => {
         card.style.animation = `fadeUp 0.6s ease-out ${i * 0.08}s forwards`;
@@ -649,11 +611,6 @@ function setFilter(btn, type) {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-    const el = document.querySelector('.animated-text');
-    if (el) {
-        const text = el.textContent;
-        el.innerHTML = text.split('').map(c => `<span class="char" style="animation-delay:${0.7 + (text.indexOf(c)*0.05)}s">${c}</span>`).join('');
-    }
     fetchAndUpdateData();
 });
 </script>
