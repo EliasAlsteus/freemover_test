@@ -87,7 +87,7 @@ animation: fadeInUp 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s forwards;
 h1 {
 font-size: clamp(2.4rem, 5vw, 3.8rem);
 font-weight: 400;
-line-height: 1.15;
+line-height: 1.2;
 color: var(--text);
 margin-bottom: 1.25rem;
 letter-spacing: -0.01em;
@@ -95,18 +95,14 @@ opacity: 0;
 animation: fadeInUp 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.45s forwards;
 }
 
-h1 em { font-style: italic; color: var(--accent); position: relative; }
-
-h1 em::after {
-content: '';
-position: absolute;
-bottom: -4px;
-left: 0;
-width: 100%;
-height: 2px;
-background: linear-gradient(90deg, var(--accent), transparent);
-animation: underlineExpand 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s forwards;
-opacity: 0;
+/* FIX: cleaner em — soft highlight instead of colored + underline */
+h1 em {
+font-style: italic;
+color: var(--text);
+position: relative;
+display: inline;
+background: linear-gradient(180deg, transparent 55%, rgba(200,184,154,0.25) 55%);
+padding: 0 2px;
 }
 
 .hero-sub {
@@ -119,22 +115,23 @@ animation: fadeInUp 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s forwards;
 }
 
 .hero-info {
-    font-size: 0.9rem;
-    color: var(--text-muted);
-    max-width: 550px;
-    margin-top: 2rem;
-    padding: 1.5rem;
-    background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-    border: 0.5px solid var(--border);
-    border-radius: 8px;
-    backdrop-filter: blur(4px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+font-size: 0.9rem;
+color: var(--text-muted);
+max-width: 550px;
+margin-top: 2rem;
+padding: 1.5rem;
+background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+border: 0.5px solid var(--border);
+border-radius: 8px;
+backdrop-filter: blur(4px);
+box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+opacity: 0;
+animation: fadeInUp 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.75s forwards;
 }
 
 .animated-text { display: inline; position: relative; }
 .char { display: inline-block; opacity: 0; animation: charBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
 
-/* Animation Delays */
 .char:nth-child(1) { animation-delay: 0.75s; }
 .char:nth-child(2) { animation-delay: 0.8s; }
 .char:nth-child(3) { animation-delay: 0.85s; }
@@ -160,7 +157,6 @@ animation: fadeInUp 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s forwards;
 @keyframes tagFadeIn { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
 @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes charBounce { 0% { opacity: 0; transform: translateY(30px); } 100% { opacity: 1; transform: translateY(0); } }
-@keyframes underlineExpand { from { opacity: 0; width: 0; } to { opacity: 1; width: 100%; } }
 
 /* --- SEARCH SECTION --- */
 .search-section {
@@ -205,16 +201,18 @@ text-transform: uppercase;
 color: var(--text-muted);
 }
 
+/* FIX: select text now clearly visible */
 .field select {
-    background: transparent;
-    border: none;
-    color: var(--text);
-    font-family: 'EB Garamond', Georgia, serif;
-    font-size: 16px;
-    outline: none;
-    cursor: pointer;
-    appearance: none;
-    width: 100%;
+background: transparent;
+border: none;
+color: var(--text);
+font-family: 'EB Garamond', Georgia, serif;
+font-size: 16px;
+outline: none;
+cursor: pointer;
+appearance: none;
+width: 100%;
+opacity: 1;
 }
 
 .field select option { background-color: #2a2a2a; color: #f0ece4; }
@@ -236,117 +234,97 @@ margin-top: 1rem;
 }
 .search-btn:hover { background: var(--accent); }
 
-/* --- FEATURED UNIVERSITIES SECTION (NEW) --- */
+/* --- FEATURED SECTION --- */
 .featured-section {
-    max-width: 820px;
-    margin: 0 auto 5rem;
-    padding: 0 2rem;
-    opacity: 0;
-    animation: fadeUp 0.8s 0.5s ease forwards;
+max-width: 820px;
+margin: 0 auto 5rem;
+padding: 0 2rem;
+opacity: 0;
+animation: fadeUp 0.8s 0.5s ease forwards;
 }
 
+/* FIX: centered label with lines on both sides */
 .featured-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: var(--accent);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+font-family: 'DM Mono', monospace;
+font-size: 10px;
+color: var(--text-dim);
+letter-spacing: 0.15em;
+text-transform: uppercase;
+margin-bottom: 1.5rem;
+display: flex;
+align-items: center;
+gap: 16px;
 }
+.featured-label::before,
 .featured-label::after {
-    content: '';
-    height: 0.5px;
-    flex: 1;
-    background: var(--accent-dim);
+content: '';
+height: 0.5px;
+flex: 1;
+background: var(--border);
 }
 
 .featured-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
+display: grid;
+grid-template-columns: repeat(2, 1fr);
+gap: 1.5rem;
 }
 
 .feat-item {
-    position: relative;
-    height: 220px;
-    background: #1a1a1a;
-    border-radius: 6px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 1.5rem;
-    text-decoration: none;
-    border: 0.5px solid var(--border);
-    transition: transform 0.3s ease, border-color 0.3s ease;
+position: relative;
+height: 220px;
+background: #1a1a1a;
+border-radius: 6px;
+overflow: hidden;
+display: flex;
+flex-direction: column;
+justify-content: flex-end;
+padding: 1.5rem;
+text-decoration: none;
+border: 0.5px solid var(--border);
+transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
 .feat-item:hover {
-    transform: translateY(-5px);
-    border-color: var(--accent);
+transform: translateY(-5px);
+border-color: rgba(200,184,154,0.4);
 }
 
 .feat-img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: 1;
-    opacity: 0.6;
-    transition: opacity 0.3s ease;
+position: absolute;
+top: 0; left: 0;
+width: 100%; height: 100%;
+object-fit: cover;
+z-index: 1;
+opacity: 0.55;
+transition: opacity 0.3s ease;
 }
 
-.feat-item:hover .feat-img {
-    opacity: 0.8;
-}
+.feat-item:hover .feat-img { opacity: 0.75; }
 
 .feat-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
-    z-index: 2;
+position: absolute;
+top: 0; left: 0;
+width: 100%; height: 100%;
+background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 55%, transparent 100%);
+z-index: 2;
 }
 
-.feat-content {
-    position: relative;
-    z-index: 3;
-}
-
-.feat-badge {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    background: var(--accent);
-    color: #1a1a1a;
-    padding: 2px 8px;
-    border-radius: 2px;
-    z-index: 3;
-}
+.feat-content { position: relative; z-index: 3; }
 
 .feat-name {
-    color: #ffffff;
-    font-size: 1.3rem;
-    font-weight: 500;
-    margin-bottom: 0.2rem;
+color: #ffffff;
+font-size: 1.3rem;
+font-weight: 500;
+margin-bottom: 0.2rem;
 }
 
 .feat-city {
-    color: rgba(255,255,255,0.7);
-    font-size: 0.9rem;
-    font-style: italic;
+color: rgba(255,255,255,0.6);
+font-size: 0.9rem;
+font-style: italic;
 }
 
-/* --- RESULTS & DIVIDER --- */
+/* --- DIVIDER --- */
 .divider {
 max-width: 820px;
 margin: 0 auto 3rem;
@@ -360,6 +338,7 @@ animation: fadeUp 0.8s 0.6s ease forwards;
 .divider-line { flex: 1; height: 0.5px; background: var(--border); }
 .divider-text { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-dim); }
 
+/* --- RESULTS --- */
 .results { max-width: 820px; margin: 0 auto; padding: 0 2rem 6rem; }
 .results-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2rem; }
 .results-header h2 { font-family: 'DM Mono', monospace; font-size: 11px; text-transform: uppercase; color: var(--text-muted); }
@@ -384,276 +363,311 @@ opacity: 0;
 
 .card-link { display: inline-block; margin-top: 1.25rem; font-family: 'DM Mono', monospace; font-size: 10px; color: var(--accent); text-decoration: none; border-bottom: 0.5px solid rgba(200,184,154,0.3); }
 
+/* --- NO RESULTS --- */
+.no-results {
+text-align: center;
+padding: 3rem 1rem;
+color: var(--text-muted);
+}
+.no-results p:first-child {
+font-size: 1.1rem;
+font-weight: 500;
+margin-bottom: 0.5rem;
+color: var(--text);
+}
+
 .loading-spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(240,236,228,0.2); border-top-color: var(--text); border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
-.no-results {
-  text-align: center;
-  padding: 3rem 1rem;
-  color: var(--text-muted);
-}
-.no-results p:first-child {
-  font-size: 1.1rem;
-  font-weight: 500;
-  margin-bottom: 0.5rem;
-  color: var(--text);
-}
 footer { border-top: 0.5px solid var(--border); padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center; }
 footer span { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-dim); }
 
 @media (max-width: 600px) {
-    .search-grid-3, .featured-grid { grid-template-columns: 1fr; }
+.search-grid-3, .featured-grid { grid-template-columns: 1fr; }
+nav { padding: 1.5rem; }
 }
 </style>
 </head>
 <body>
 
 <nav>
-<div class="logo">UniMatchr</div>
-<div class="nav-tag">BETA VERSION</div>
+  <div class="logo">UniMatchr</div>
+  <div class="nav-tag">BETA VERSION</div>
 </nav>
 
 <section class="hero">
   <p class="hero-label">For freemover students</p>
-  <h1 class="hero-title">
+  <h1>
     Stop scrolling through<br>
     <em>endless university lists</em>
   </h1>
   <p class="hero-sub">
-    UniMatchr matches you with universities worldwide based on your degree — 
+    UniMatchr matches you with universities worldwide based on your degree —
     including freemover options your home university never told you about.
   </p>
   <div class="hero-info">
-      <strong>What's a freemover?</strong> You apply directly to a university abroad — 
+    <strong>What's a freemover?</strong> You apply directly to a university abroad —
     not through an exchange agreement. More freedom, more options, usually tuition fees apply.
   </div>
 </section>
 
 <section class="search-section">
-    <div class="search-grid-full">
-        <div class="field">
-            <label>What are you studying?</label>
-            <select id="sel-subject">
-                <option value="all">Show All Programs</option>
-                <optgroup label="Engineering & Tech">
-                    <option value="Mechanical Engineering">Mechanical Engineering</option>
-                    <option value="Computer Science">Computer Science / IT</option>
-                </optgroup>
-                <optgroup label="Business & Economics">
-                    <option value="Business">International Business</option>
-                    <option value="Finance">Finance / Accounting</option>
-                </optgroup>
-            </select>
-        </div>
+  <div class="search-grid-full">
+    <div class="field">
+      <label>What are you studying?</label>
+      <select id="sel-subject">
+        <option value="all">Show All Programs</option>
+        <optgroup label="Engineering & Tech">
+          <option value="mechanical engineering">Mechanical Engineering</option>
+          <option value="computer science">Computer Science / IT</option>
+        </optgroup>
+        <optgroup label="Business & Economics">
+          <option value="business">International Business</option>
+          <option value="finance">Finance / Accounting</option>
+        </optgroup>
+      </select>
     </div>
-    <div class="search-grid-3">
-        <div class="field">
-            <label>Continent</label>
-            <select id="sel-continent" onchange="updateCountryDropdown()">
-                <option value="all">All Continents</option>
-            </select>
-        </div>
-        <div class="field">
-            <label>Country</label>
-            <select id="sel-country">
-                <option value="all">All Countries</option>
-            </select>
-        </div>
-        <div class="field">
-            <label>Language</label>
-            <select id="sel-lang">
-                <option value="all">All</option>
-                <option value="English">English</option>
-            </select>
-        </div>
+  </div>
+  <div class="search-grid-3">
+    <div class="field">
+      <label>Continent</label>
+      <select id="sel-continent" onchange="updateCountryDropdown()">
+        <option value="all">All Continents</option>
+      </select>
     </div>
-    <button class="search-btn" id="search-btn" onclick="runSearch()">Search Universities →</button>
+    <div class="field">
+      <label>Country</label>
+      <select id="sel-country">
+        <option value="all">All Countries</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Language</label>
+      <select id="sel-lang">
+        <option value="all">All</option>
+        <option value="English">English</option>
+      </select>
+    </div>
+  </div>
+  <button class="search-btn" id="search-btn" onclick="runSearch()">Search Universities →</button>
 </section>
---featured--
+
 <section class="featured-section">
-    <div class="featured-label">Featured Universities</div>
-    <div class="featured-grid">
-        
-        <a href="https://www.unimelb.edu.au/" target="_blank" class="feat-item">
-            <img src="images/melbourne.jpg" class="feat-img" alt="Melbourne">
-            <div class="feat-badge">FEATURED</div>
-            <div class="feat-overlay"></div>
-            <div class="feat-content">
-                <div class="feat-name">University of Melbourne</div>
-                <div class="feat-city">Melbourne, Australia</div>
-            </div>
-        </a>
+  <div class="featured-label">Featured Universities</div>
+  <div class="featured-grid">
 
-        <a href="https://liu.se/en/" target="_blank" class="feat-item">
-            <img src="images/linkoping.jpg" class="feat-img" alt="Linköping">
-            <div class="feat-badge">FEATURED</div>
-            <div class="feat-overlay"></div>
-            <div class="feat-content">
-                <div class="feat-name">Linköping University</div>
-                <div class="feat-city">Linköping, Sweden</div>
-            </div>
-        </a>
+    <a href="https://www.unimelb.edu.au/" target="_blank" class="feat-item">
+      <img src="images/melbourne.jpg" class="feat-img" alt="Melbourne">
+      <div class="feat-overlay"></div>
+      <div class="feat-content">
+        <div class="feat-name">University of Melbourne</div>
+        <div class="feat-city">Melbourne, Australia</div>
+      </div>
+    </a>
 
-        <a href="https://www.su.ac.za/en" target="_blank" class="feat-item">
-            <img src="images/stellenbosch.jpg" class="feat-img" alt="Stellenbosch">
-            <div class="feat-badge">FEATURED</div>
-            <div class="feat-overlay"></div>
-            <div class="feat-content">
-                <div class="feat-name">Stellenbosch University</div>
-                <div class="feat-city">Stellenbosch, South Africa</div>
-            </div>
-        </a>
+    <a href="https://liu.se/en/" target="_blank" class="feat-item">
+      <img src="images/linkoping.jpg" class="feat-img" alt="Linköping">
+      <div class="feat-overlay"></div>
+      <div class="feat-content">
+        <div class="feat-name">Linköping University</div>
+        <div class="feat-city">Linköping, Sweden</div>
+      </div>
+    </a>
 
-        <a href="https://www.ethz.ch/" target="_blank" class="feat-item">
-            <img src="images/zurich.jpg" class="feat-img" alt="Zurich">
-            <div class="feat-badge">FEATURED</div>
-            <div class="feat-overlay"></div>
-            <div class="feat-content">
-                <div class="feat-name">ETH Zurich</div>
-                <div class="feat-city">Zurich, Switzerland</div>
-            </div>
-        </a>
+    <a href="https://www.su.ac.za/en" target="_blank" class="feat-item">
+      <img src="images/stellenbosch.jpg" class="feat-img" alt="Stellenbosch">
+      <div class="feat-overlay"></div>
+      <div class="feat-content">
+        <div class="feat-name">Stellenbosch University</div>
+        <div class="feat-city">Stellenbosch, South Africa</div>
+      </div>
+    </a>
 
-    </div>
+    <a href="https://www.ethz.ch/" target="_blank" class="feat-item">
+      <img src="images/zurich.jpg" class="feat-img" alt="Zurich">
+      <div class="feat-overlay"></div>
+      <div class="feat-content">
+        <div class="feat-name">ETH Zurich</div>
+        <div class="feat-city">Zurich, Switzerland</div>
+      </div>
+    </a>
+
+  </div>
 </section>
 
 <div class="divider">
-<div class="divider-line"></div>
-<div class="divider-text" id="divider-label">Loading database...</div>
-<div class="divider-line"></div>
+  <div class="divider-line"></div>
+  <div class="divider-text" id="divider-label">Loading database...</div>
+  <div class="divider-line"></div>
 </div>
 
 <section class="results">
-<div id="results-header" class="results-header" style="display:none">
-<h2>Compatible Universities</h2>
-<span id="results-count"></span>
-</div>
-<div id="uni-list"></div>
+  <div id="results-header" class="results-header" style="display:none">
+    <h2>Compatible Universities</h2>
+    <span id="results-count"></span>
+  </div>
+  <div id="uni-list"></div>
 </section>
 
 <footer>
-<span>UniMatchr © 2026</span>
-<span>Data synced: <span id="last-sync">...</span></span>
+  <span>UniMatchr © 2026</span>
+  <span>Data synced: <span id="last-sync">...</span></span>
 </footer>
 
 <script>
 let universities = [];
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTAa9qeWsvV_sYuZ5m8-2t-3N08Y2sN1_au0tEZqBYWzFRJP9NGLTxZKSN40y-Sq6HoDbWH-iO80bPT/pub?output=csv';
 
+// FIX: proper CSV parser that handles quoted fields with commas inside
+function parseCSVRow(row) {
+  const result = [];
+  let current = '';
+  let inQuotes = false;
+  for (let i = 0; i < row.length; i++) {
+    const ch = row[i];
+    if (ch === '"') {
+      inQuotes = !inQuotes;
+    } else if (ch === ',' && !inQuotes) {
+      result.push(current.trim());
+      current = '';
+    } else {
+      current += ch;
+    }
+  }
+  result.push(current.trim());
+  return result;
+}
+
 async function fetchAndUpdateData() {
-    try {
-        const response = await fetch(CSV_URL);
-        const csvText = await response.text();
-        universities = parseCSVToUniversities(csvText);
-        updateDropdowns();
-        document.getElementById('divider-label').textContent = universities.length + ' universities available';
-        document.getElementById('last-sync').textContent = new Date().toLocaleTimeString();
-    } catch (e) { console.error(e); }
+  try {
+    const response = await fetch(CSV_URL);
+    const csvText = await response.text();
+    universities = parseCSVToUniversities(csvText);
+    updateDropdowns();
+    document.getElementById('divider-label').textContent = universities.length + ' universities available';
+    document.getElementById('last-sync').textContent = new Date().toLocaleTimeString();
+  } catch (e) {
+    console.error(e);
+    document.getElementById('divider-label').textContent = 'Could not load database';
+  }
 }
 
 function parseCSVToUniversities(csvText) {
-    const rows = csvText.split('\n').slice(1);
-    return rows.filter(r => r.trim()).map(row => {
-        const v = row.split(',');
-        return {
-            name: v[1], country: v[2], city: v[3], url: v[4], lang: v[5],
-            deadline_ht: v[7] || '—', deadline_vt: v[8] || '—',
-            cost_eu: v[10], gpa_krav: v[12] || '—',
-            subjects: v[17] ? v[17].toLowerCase() : '',
-            continent: v[18] || ''
-        };
-    });
+  const rows = csvText.split('\n').slice(1);
+  return rows.filter(r => r.trim()).map(row => {
+    const v = parseCSVRow(row);
+    return {
+      name:       v[1]  || '',
+      country:    v[2]  || '',
+      city:       v[3]  || '',
+      url:        v[4]  || '',
+      lang:       v[5]  || '',
+      deadline_ht: v[7] || '—',
+      deadline_vt: v[8] || '—',
+      cost_eu:    v[10] || '',
+      gpa_krav:   v[12] || '—',
+      subjects:   v[17] ? v[17].toLowerCase() : '',
+      continent:  v[18] || ''
+    };
+  });
 }
 
 function updateDropdowns() {
-    const continents = [...new Set(universities.map(u => u.continent))].filter(Boolean).sort();
-    const sel = document.getElementById('sel-continent');
-    continents.forEach(c => {
-        const opt = document.createElement('option');
-        opt.value = opt.textContent = c;
-        sel.appendChild(opt);
-    });
-    updateCountryDropdown();
+  const continents = [...new Set(universities.map(u => u.continent))].filter(Boolean).sort();
+  const sel = document.getElementById('sel-continent');
+  // Clear old options except first
+  while (sel.options.length > 1) sel.remove(1);
+  continents.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = opt.textContent = c;
+    sel.appendChild(opt);
+  });
+  updateCountryDropdown();
 }
 
 function updateCountryDropdown() {
-    const cont = document.getElementById('sel-continent').value;
-    const cSelect = document.getElementById('sel-country');
-    const countries = [...new Set(universities.filter(u => cont === 'all' || u.continent === cont).map(u => u.country))].filter(Boolean).sort();
-    cSelect.innerHTML = '<option value="all">All Countries</option>';
-    countries.forEach(c => {
-        const opt = document.createElement('option');
-        opt.value = opt.textContent = c;
-        cSelect.appendChild(opt);
-    });
+  const cont = document.getElementById('sel-continent').value;
+  const cSelect = document.getElementById('sel-country');
+  const countries = [...new Set(
+    universities
+      .filter(u => cont === 'all' || u.continent === cont)
+      .map(u => u.country)
+  )].filter(Boolean).sort();
+  cSelect.innerHTML = '<option value="all">All Countries</option>';
+  countries.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = opt.textContent = c;
+    cSelect.appendChild(opt);
+  });
 }
 
 function runSearch() {
-    const btn = document.getElementById('search-btn');
-    btn.innerHTML = '<span class="loading-spinner"></span> Searching...';
-    
-    setTimeout(() => {
-        const prog = document.getElementById('sel-subject').value.toLowerCase();
-        const cont = document.getElementById('sel-continent').value;
-        const coun = document.getElementById('sel-country').value;
+  const btn = document.getElementById('search-btn');
+  btn.innerHTML = '<span class="loading-spinner"></span> Searching...';
 
-        const filtered = universities.filter(u => {
-            const mProg = prog === 'all' || u.subjects.includes(prog);
-            const mCont = cont === 'all' || u.continent === cont;
-            const mCoun = coun === 'all' || u.country === coun;
-            return mProg && mCont && mCoun;
-        });
+  setTimeout(() => {
+    const prog = document.getElementById('sel-subject').value.toLowerCase();
+    const cont = document.getElementById('sel-continent').value;
+    const coun = document.getElementById('sel-country').value;
+    const lang = document.getElementById('sel-lang').value;
 
-        document.getElementById('results-header').style.display = 'flex';
-        document.getElementById('results-count').textContent = filtered.length + ' universities';
-        
-        const list = document.getElementById('uni-list');
-      if (filtered.length === 0) {
-    list.innerHTML = `
-        <div class="no-results">
-            <p>😕 No universities found</p>
-            <p>Try selecting a wider region, a different program, or removing the language filter.</p>
-        </div>
-    `;
-} else {
-    list.innerHTML = filtered.map(u => `
-        <div class="uni-card">
-            <div class="card-top">
-                <div>
-                    <div class="uni-name">${u.name}</div>
-                    <div class="uni-city">${u.city}, ${u.country}</div>
-                </div>
-            </div>
-            <div class="card-meta">
-                <div class="meta-item"><span class="meta-label">Tuition (EU)</span><span class="meta-val">€${u.cost_eu || '—'}</span></div>
-                <div class="meta-item"><span class="meta-label">GPA Requirement</span><span class="meta-val">${u.gpa_krav}</span></div>
-            </div>
-            <a class="card-link" href="${u.url}" target="_blank">Visit University →</a>
-        </div>
-    `).join('');
-
-    document.querySelectorAll('.uni-card').forEach((c, i) => {
-        c.style.animation = `fadeUp 0.6s ease-out ${i * 0.1}s forwards`;
+    const filtered = universities.filter(u => {
+      const mProg = prog === 'all' || u.subjects.includes(prog);
+      const mCont = cont === 'all' || u.continent === cont;
+      const mCoun = coun === 'all' || u.country === coun;
+      const mLang = lang === 'all' || u.lang === lang;
+      return mProg && mCont && mCoun && mLang;
     });
-}
 
-        document.querySelectorAll('.uni-card').forEach((c, i) => {
-            c.style.animation = `fadeUp 0.6s ease-out ${i * 0.1}s forwards`;
-        });
+    document.getElementById('results-header').style.display = 'flex';
+    document.getElementById('results-count').textContent = filtered.length + ' universities';
 
-        btn.innerHTML = 'Search Universities →';
-        document.getElementById('results-header').scrollIntoView({ behavior: 'smooth' });
-    }, 400);
+    const list = document.getElementById('uni-list');
+
+    // FIX: no-results message + removed duplicate forEach
+    if (filtered.length === 0) {
+      list.innerHTML = `
+        <div class="no-results">
+          <p>😕 No universities found</p>
+          <p>Try selecting a wider region, a different program, or removing the language filter.</p>
+        </div>
+      `;
+    } else {
+      list.innerHTML = filtered.map(u => `
+        <div class="uni-card">
+          <div class="card-top">
+            <div>
+              <div class="uni-name">${u.name}</div>
+              <div class="uni-city">${u.city}, ${u.country}</div>
+            </div>
+          </div>
+          <div class="card-meta">
+            <div class="meta-item">
+              <span class="meta-label">Tuition (EU)</span>
+              <span class="meta-val">${u.cost_eu ? '€' + u.cost_eu : '—'}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">GPA Requirement</span>
+              <span class="meta-val">${u.gpa_krav}</span>
+            </div>
+          </div>
+          <a class="card-link" href="${u.url}" target="_blank">Visit University →</a>
+        </div>
+      `).join('');
+
+      document.querySelectorAll('.uni-card').forEach((c, i) => {
+        c.style.animation = `fadeUp 0.6s ease-out ${i * 0.1}s forwards`;
+      });
+    }
+
+    btn.innerHTML = 'Search Universities →';
+    document.getElementById('results-header').scrollIntoView({ behavior: 'smooth' });
+  }, 400);
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-    const el = document.querySelector('.animated-text');
-    if (el) {
-        const text = el.textContent;
-        el.innerHTML = text.split('').map(c => `<span class="char">${c}</span>`).join('');
-    }
-    fetchAndUpdateData();
+  fetchAndUpdateData();
 });
 </script>
 </body>
