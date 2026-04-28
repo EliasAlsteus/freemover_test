@@ -3,223 +3,152 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UniMatchr</title>
+<title>UniMatchr | Find Your Exchange</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
+/* --- GRUNDSTYLING --- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
---bg: #2a2a2a;
---bg-card: #333333;
---bg-input: #3a3a3a;
---border: rgba(255,255,255,0.1);
---border-hover: rgba(255,255,255,0.25);
---text: #f0ece4;
---text-muted: rgba(240,236,228,0.45);
---text-dim: rgba(240,236,228,0.25);
---accent: #c8b89a;
---accent-dim: rgba(200,184,154,0.15);
---green: #8fb89a;
---green-dim: rgba(143,184,154,0.15);
---amber: #c8a86a;
---amber-dim: rgba(200,168,106,0.15);
+    --bg: #2a2a2a;
+    --bg-card: #333333;
+    --border: rgba(255,255,255,0.1);
+    --text: #f0ece4;
+    --text-muted: rgba(240,236,228,0.45);
+    --text-dim: rgba(240,236,228,0.25);
+    --accent: #c8b89a;
+    --accent-dim: rgba(200,184,154,0.15);
 }
 
 html { background: var(--bg); scroll-behavior: smooth; }
-
 body {
-font-family: 'EB Garamond', Georgia, serif;
-background: var(--bg);
-color: var(--text);
-min-height: 100vh;
-font-size: 17px;
-line-height: 1.6;
+    font-family: 'EB Garamond', Georgia, serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 17px;
+    line-height: 1.6;
 }
 
+/* --- NAVIGATION --- */
 nav {
-display: flex;
-justify-content: space-between;
-align-items: center;
-padding: 2rem 3rem;
-border-bottom: 0.5px solid var(--border);
-position: sticky;
-top: 0;
-background: var(--bg);
-z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    border-bottom: 0.5px solid var(--border);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 100;
 }
 .logo {
-font-family: 'DM Mono', monospace;
-font-size: 13px;
-letter-spacing: 0.12em;
-color: var(--accent);
-text-transform: uppercase;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
 }
 .nav-tag {
-font-family: 'DM Mono', monospace;
-font-size: 11px;
-color: var(--text-muted);
-letter-spacing: 0.06em;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
 }
 
+/* --- HERO --- */
 .hero {
-max-width: 820px;
-margin: 0 auto;
-padding: 5rem 2rem 4rem;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 4rem 2rem 3rem;
 }
 .hero-label {
-font-family: 'DM Mono', monospace;
-font-size: 11px;
-color: var(--text-muted);
-letter-spacing: 0.1em;
-text-transform: uppercase;
-margin-bottom: 1.5rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
 }
-
 h1 {
-font-size: clamp(2.4rem, 5vw, 3.8rem);
-font-weight: 400;
-line-height: 1.15;
-color: var(--text);
-margin-bottom: 1.25rem;
-letter-spacing: -0.01em;
-}
-
-h1 em { font-style: italic; color: var(--accent); position: relative; }
-
-.hero-sub {
-font-size: 1.05rem;
-color: var(--text-muted);
-max-width: 480px;
-line-height: 1.7;
-}
-
-/* --- FEATURED SECTION --- */
-.featured-section {
-    max-width: 820px;
-    margin: 4rem auto 2rem;
-    padding: 0 2rem;
-}
-.featured-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 10px;
-    color: var(--accent);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.featured-label::after {
-    content: '';
-    height: 0.5px;
-    flex: 1;
-    background: var(--accent-dim);
-}
-.featured-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-}
-.featured-item {
-    position: relative;
-    height: 240px;
-    background: #1a1a1a;
-    border-radius: 6px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 1.5rem;
-    text-decoration: none;
-    border: 0.5px solid var(--border);
-    transition: transform 0.3s ease, border-color 0.3s ease;
-}
-.featured-item:hover {
-    transform: translateY(-4px);
-    border-color: var(--accent);
-}
-.featured-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0.6;
-    z-index: 1;
-    transition: transform 0.5s ease, opacity 0.5s ease;
-}
-.featured-item:hover .featured-image {
-    transform: scale(1.05);
-    opacity: 0.75;
-}
-.featured-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
-    z-index: 2;
-}
-
-/* PARTNER BADGE */
-.partner-badge {
-    position: absolute;
-    top: 12px;
-    right: -25px;
-    background: var(--accent);
-    color: #1a1a1a;
-    font-family: 'DM Mono', monospace;
-    font-size: 8px;
-    font-weight: 500;
-    padding: 4px 30px;
-    transform: rotate(45deg);
-    z-index: 4;
-}
-
-.feat-content {
-    position: relative;
-    z-index: 3;
-    color: #ffffff;
-}
-.feat-name {
-    font-size: 1.3rem;
+    font-size: clamp(2.4rem, 5vw, 3.5rem);
     font-weight: 400;
-    margin-bottom: 0.2rem;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    line-height: 1.1;
+    margin-bottom: 1rem;
 }
-.feat-location {
-    font-size: 0.9rem;
-    font-style: italic;
-    color: rgba(255,255,255,0.7);
-    margin-bottom: 1.2rem;
-}
-.feat-link {
-    font-family: 'DM Mono', monospace;
-    font-size: 9px;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-}
+h1 em { font-style: italic; color: var(--accent); }
+.hero-sub { color: var(--text-muted); max-width: 500px; }
 
-/* --- SEARCH & DIVIDER --- */
-.search-section { max-width: 820px; margin: 0 auto; padding: 0 2rem 1rem; }
-.search-grid-full { display: grid; border: 0.5px solid var(--border); border-radius: 4px 4px 0 0; overflow: hidden; margin-bottom: 1px; }
+/* --- SEARCH SECTION (RESTORED) --- */
+.search-section { max-width: 820px; margin: 0 auto; padding: 0 2rem; }
+.search-grid-full { border: 0.5px solid var(--border); border-radius: 4px 4px 0 0; overflow: hidden; margin-bottom: 1px; }
 .search-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; border: 0.5px solid var(--border); border-top: none; border-radius: 0 0 4px 4px; overflow: hidden; }
 .field { background: var(--bg-card); padding: 1rem 1.25rem; display: flex; flex-direction: column; gap: 0.3rem; }
 .field label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
-.field select { background: transparent; border: none; color: var(--text); font-family: inherit; font-size: 16px; outline: none; appearance: none; width: 100%; cursor: pointer; }
-.search-btn { width: 100%; background: var(--text); color: var(--bg); border: none; padding: 1rem; font-family: 'DM Mono', monospace; font-size: 12px; cursor: pointer; margin-top: 1px; border-radius: 4px; transition: 0.2s; }
+.field select { background: transparent; border: none; color: var(--text); font-family: inherit; font-size: 16px; outline: none; appearance: none; cursor: pointer; width: 100%; }
+.search-btn { 
+    width: 100%; background: var(--text); color: var(--bg); border: none; padding: 1.2rem; 
+    font-family: 'DM Mono', monospace; font-size: 12px; cursor: pointer; margin-top: 1rem; 
+    border-radius: 4px; transition: 0.2s; 
+}
 .search-btn:hover { background: var(--accent); }
 
-.divider { max-width: 820px; margin: 4rem auto 2rem; padding: 0 2rem; display: flex; align-items: center; gap: 1rem; }
+/* --- FEATURED SECTION (WITH FIXED IMAGES) --- */
+.featured-section { max-width: 820px; margin: 4rem auto; padding: 0 2rem; }
+.featured-label {
+    font-family: 'DM Mono', monospace; font-size: 10px; color: var(--accent);
+    letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 10px;
+}
+.featured-label::after { content: ''; height: 0.5px; flex: 1; background: var(--accent-dim); }
+
+.featured-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.featured-item {
+    position: relative; height: 220px; background: #1a1a1a; border-radius: 6px;
+    overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 1.5rem; text-decoration: none; border: 0.5px solid var(--border);
+    transition: transform 0.3s ease;
+}
+.featured-item:hover { transform: translateY(-4px); border-color: var(--accent); }
+
+.featured-image {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    object-fit: cover; opacity: 0.5; z-index: 1; transition: 0.5s;
+}
+.featured-item:hover .featured-image { opacity: 0.7; transform: scale(1.05); }
+
+.featured-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+    z-index: 2;
+}
+
+.partner-badge {
+    position: absolute; top: 12px; right: -25px; background: var(--accent);
+    color: #1a1a1a; font-family: 'DM Mono', monospace; font-size: 8px;
+    padding: 4px 30px; transform: rotate(45deg); z-index: 4;
+}
+
+.feat-content { position: relative; z-index: 3; }
+.feat-name { font-size: 1.3rem; color: #fff; margin-bottom: 0.2rem; }
+.feat-location { font-size: 0.9rem; font-style: italic; color: rgba(255,255,255,0.7); }
+
+/* --- RESULTS --- */
+.divider { max-width: 820px; margin: 2rem auto; padding: 0 2rem; display: flex; align-items: center; gap: 1rem; }
 .divider-line { flex: 1; height: 0.5px; background: var(--border); }
 .divider-text { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-dim); }
 
-.results { max-width: 820px; margin: 0 auto; padding: 0 2rem 6rem; }
+.results { max-width: 820px; margin: 0 auto; padding: 0 2rem 5rem; }
+.uni-card { 
+    background: var(--bg-card); border: 0.5px solid var(--border); 
+    padding: 1.5rem; border-radius: 4px; margin-bottom: 1rem;
+    display: flex; justify-content: space-between; align-items: center;
+}
+.uni-info h3 { font-weight: 500; font-size: 1.2rem; }
+.uni-info p { font-size: 0.9rem; color: var(--text-muted); font-style: italic; }
+.view-btn { 
+    font-family: 'DM Mono', monospace; font-size: 10px; color: var(--accent); 
+    text-decoration: none; border: 0.5px solid var(--accent); padding: 0.5rem 1rem; border-radius: 30px;
+}
 
 @media (max-width: 600px) {
     .search-grid-3, .featured-grid { grid-template-columns: 1fr; }
@@ -229,99 +158,177 @@ line-height: 1.7;
 <body>
 
 <nav>
-<div class="logo">UniMatchr</div>
-<div class="nav-tag">BETA VERSION</div>
+    <div class="logo">UniMatchr</div>
+    <div class="nav-tag">BETA 1.0</div>
 </nav>
 
 <section class="hero">
-<p class="hero-label">Exchange studies, simplified</p>
-<h1 class="hero-title">Find your <em>perfect</em> exchange university</h1>
-<p class="hero-sub">Go beyond partner lists. Explore global freemover opportunities tailored to your degree.</p>
+    <p class="hero-label">Exchange studies, simplified</p>
+    <h1>Find your <em>perfect</em> exchange university</h1>
+    <p class="hero-sub">Search through our database of global freemover and partner opportunities.</p>
 </section>
 
 <section class="search-section">
     <div class="search-grid-full">
         <div class="field">
-            <label>What are you studying?</label>
+            <label>Field of Study</label>
             <select id="sel-subject">
-                <option value="all">Show All Programs</option>
-                <optgroup label="Engineering & Tech">
-                    <option value="Computer Science">Computer Science / IT</option>
-                </optgroup>
+                <option value="all">All Subjects</option>
+                <option value="Business">Business & Economics</option>
+                <option value="Computer Science">Computer Science / IT</option>
+                <option value="Engineering">Engineering</option>
             </select>
         </div>
     </div>
     <div class="search-grid-3">
-        <div class="field"><label>Continent</label><select id="sel-continent"><option value="all">All</option></select></div>
-        <div class="field"><label>Country</label><select id="sel-country"><option value="all">All</option></select></div>
-        <div class="field"><label>Language</label><select id="sel-lang"><option value="all">All</option></select></div>
+        <div class="field">
+            <label>Continent</label>
+            <select id="sel-continent" onchange="updateCountryDropdown()">
+                <option value="all">All</option>
+            </select>
+        </div>
+        <div class="field">
+            <label>Country</label>
+            <select id="sel-country">
+                <option value="all">All</option>
+            </select>
+        </div>
+        <div class="field">
+            <label>Language</label>
+            <select id="sel-lang">
+                <option value="all">All</option>
+                <option value="English">English</option>
+            </select>
+        </div>
     </div>
-    <button class="search-btn">Search Universities →</button>
+    <button class="search-btn" onclick="runSearch()">Search Universities →</button>
 </section>
 
 <section class="featured-section">
     <div class="featured-label">Featured Universities</div>
     <div class="featured-grid">
-        
-        <a href="https://www.unimelb.edu.au/" target="_blank" class="featured-item">
-            <img src="https://images.unsplash.com/photo-1514395495938-b1c72b83b2df?q=80&w=1000&auto=format&fit=crop" class="featured-image" alt="Melbourne">
+        <a href="#" class="featured-item">
+            <img src="https://images.unsplash.com/photo-1514395495938-b1c72b83b2df?auto=format&fit=crop&w=800&q=80" class="featured-image">
             <div class="featured-overlay"></div>
             <div class="partner-badge">PARTNER</div>
             <div class="feat-content">
                 <div class="feat-name">University of Melbourne</div>
                 <div class="feat-location">Melbourne, Australia</div>
-                <div class="feat-link">Explore Program →</div>
             </div>
         </a>
-
-        <a href="https://www.nus.edu.sg/" target="_blank" class="featured-item">
-            <img src="https://images.unsplash.com/photo-1525625293386-3fb0ad7c13f3?q=80&w=1000&auto=format&fit=crop" class="featured-image" alt="Singapore">
+        <a href="#" class="featured-item">
+            <img src="https://images.unsplash.com/photo-1525625293386-3fb0ad7c13f3?auto=format&fit=crop&w=800&q=80" class="featured-image">
             <div class="featured-overlay"></div>
             <div class="partner-badge">PARTNER</div>
             <div class="feat-content">
                 <div class="feat-name">National University of Singapore</div>
                 <div class="feat-location">Singapore, Singapore</div>
-                <div class="feat-link">Explore Program →</div>
-            </div>
-        </a>
-
-        <a href="https://www.ubc.ca/" target="_blank" class="featured-item">
-            <img src="https://images.unsplash.com/photo-1559511260-66a654ae982a?q=80&w=1000&auto=format&fit=crop" class="featured-image" alt="Vancouver">
-            <div class="featured-overlay"></div>
-            <div class="partner-badge">PARTNER</div>
-            <div class="feat-content">
-                <div class="feat-name">University of British Columbia</div>
-                <div class="feat-location">Vancouver, Canada</div>
-                <div class="feat-link">Explore Program →</div>
-            </div>
-        </a>
-
-        <a href="https://www.ethz.ch/en.html" target="_blank" class="featured-item">
-            <img src="https://images.unsplash.com/photo-1527668752968-14dc70a2745c?q=80&w=1000&auto=format&fit=crop" class="featured-image" alt="Zurich">
-            <div class="featured-overlay"></div>
-            <div class="partner-badge">PARTNER</div>
-            <div class="feat-content">
-                <div class="feat-name">ETH Zurich</div>
-                <div class="feat-location">Zurich, Switzerland</div>
-                <div class="feat-link">Explore Program →</div>
             </div>
         </a>
     </div>
 </section>
 
 <div class="divider">
-<div class="divider-line"></div>
-<div class="divider-text" id="divider-label">Ready to search</div>
-<div class="divider-line"></div>
+    <div class="divider-line"></div>
+    <div class="divider-text" id="status-label">Connecting to database...</div>
+    <div class="divider-line"></div>
 </div>
 
 <section class="results">
     <div id="uni-list"></div>
 </section>
 
-<footer>
-<span>UniMatchr © 2026</span>
-</footer>
+<script>
+let universities = [];
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTAa9qeWsvV_sYuZ5m8-2t-3N08Y2sN1_au0tEZqBYWzFRJP9NGLTxZKSN40y-Sq6HoDbWH-iO80bPT/pub?output=csv';
+
+// 1. Hämta data från Google Sheets
+async function init() {
+    try {
+        const resp = await fetch(CSV_URL);
+        const data = await resp.text();
+        const rows = data.split('\n').slice(1);
+        
+        universities = rows.map(row => {
+            const c = row.split(',');
+            return {
+                name: c[1]?.trim(),
+                country: c[2]?.trim(),
+                continent: c[18]?.trim(),
+                subject: c[17]?.trim(),
+                link: c[13]?.trim()
+            };
+        }).filter(u => u.name);
+
+        populateContinents();
+        document.getElementById('status-label').innerText = `${universities.length} universities found`;
+    } catch (err) {
+        document.getElementById('status-label').innerText = "Error loading data.";
+    }
+}
+
+// 2. Fyll i världsdelar
+function populateContinents() {
+    const continents = [...new Set(universities.map(u => u.continent))].filter(Boolean).sort();
+    const sel = document.getElementById('sel-continent');
+    continents.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c; opt.innerText = c;
+        sel.appendChild(opt);
+    });
+}
+
+// 3. Uppdatera länder baserat på världsdel
+function updateCountryDropdown() {
+    const cont = document.getElementById('sel-continent').value;
+    const sel = document.getElementById('sel-country');
+    sel.innerHTML = '<option value="all">All Countries</option>';
+    
+    const countries = [...new Set(universities
+        .filter(u => cont === 'all' || u.continent === cont)
+        .map(u => u.country))]
+        .filter(Boolean).sort();
+
+    countries.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c; opt.innerText = c;
+        sel.appendChild(opt);
+    });
+}
+
+// 4. Sökfunktion
+function runSearch() {
+    const sub = document.getElementById('sel-subject').value.toLowerCase();
+    const cont = document.getElementById('sel-continent').value;
+    const coun = document.getElementById('sel-country').value;
+    const list = document.getElementById('uni-list');
+    
+    const filtered = universities.filter(u => {
+        const matchSub = sub === 'all' || (u.subject && u.subject.toLowerCase().includes(sub));
+        const matchCont = cont === 'all' || u.continent === cont;
+        const matchCoun = coun === 'all' || u.country === coun;
+        return matchSub && matchCont && matchCoun;
+    });
+
+    list.innerHTML = filtered.length > 0 ? '' : '<p style="text-align:center; color:var(--text-dim);">No matches found. Try broadening your search.</p>';
+    
+    filtered.forEach(u => {
+        list.innerHTML += `
+            <div class="uni-card">
+                <div class="uni-info">
+                    <h3>${u.name}</h3>
+                    <p>${u.country}, ${u.continent}</p>
+                </div>
+                <a href="${u.link || '#'}" target="_blank" class="view-btn">View Program</a>
+            </div>
+        `;
+    });
+    
+    window.scrollTo({ top: document.querySelector('.divider').offsetTop - 100, behavior: 'smooth' });
+}
+
+window.onload = init;
+</script>
 
 </body>
 </html>
