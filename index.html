@@ -388,6 +388,17 @@ opacity: 0;
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
+.no-results {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--text-muted);
+}
+.no-results p:first-child {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--text);
+}
 footer { border-top: 0.5px solid var(--border); padding: 2rem 3rem; display: flex; justify-content: space-between; align-items: center; }
 footer span { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-dim); }
 
@@ -404,15 +415,19 @@ footer span { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--t
 </nav>
 
 <section class="hero">
-<p class="hero-label">Exchange studies, simplified</p>
-<h1 class="hero-title">
-Find your <em>perfect</em><br>
-<span class="animated-text">exchange university</span>
-</h1>
-<p class="hero-sub">Go beyond partner lists. Explore global freemover opportunities tailored to your degree.</p>
-<div class="hero-info">
-<strong>About this tool:</strong> UniMatchr helps you navigate freemover opportunities worldwide. Note: As a freemover, you apply independently and usually pay tuition fees.
-</div>
+  <p class="hero-label">For freemover students</p>
+  <h1 class="hero-title">
+    Stop scrolling through<br>
+    <em>endless university lists</em>
+  </h1>
+  <p class="hero-sub">
+    UniMatchr matches you with universities worldwide based on your degree — 
+    including freemover options your home university never told you about.
+  </p>
+  <div class="hero-info">
+      <strong>What's a freemover?</strong> You apply directly to a university abroad — 
+    not through an exchange agreement. More freedom, more options, usually tuition fees apply.
+  </div>
 </section>
 
 <section class="search-section">
@@ -455,14 +470,14 @@ Find your <em>perfect</em><br>
     </div>
     <button class="search-btn" id="search-btn" onclick="runSearch()">Search Universities →</button>
 </section>
-
+--featured--
 <section class="featured-section">
     <div class="featured-label">Featured Universities</div>
     <div class="featured-grid">
         
         <a href="https://www.unimelb.edu.au/" target="_blank" class="feat-item">
             <img src="images/melbourne.jpg" class="feat-img" alt="Melbourne">
-            <div class="feat-badge">PARTNER</div>
+            <div class="feat-badge">FEATURED</div>
             <div class="feat-overlay"></div>
             <div class="feat-content">
                 <div class="feat-name">University of Melbourne</div>
@@ -472,7 +487,7 @@ Find your <em>perfect</em><br>
 
         <a href="https://liu.se/en/" target="_blank" class="feat-item">
             <img src="images/linkoping.jpg" class="feat-img" alt="Linköping">
-            <div class="feat-badge">PARTNER</div>
+            <div class="feat-badge">FEATURED</div>
             <div class="feat-overlay"></div>
             <div class="feat-content">
                 <div class="feat-name">Linköping University</div>
@@ -594,21 +609,34 @@ function runSearch() {
         document.getElementById('results-count').textContent = filtered.length + ' universities';
         
         const list = document.getElementById('uni-list');
-        list.innerHTML = filtered.map(u => `
-            <div class="uni-card">
-                <div class="card-top">
-                    <div>
-                        <div class="uni-name">${u.name}</div>
-                        <div class="uni-city">${u.city}, ${u.country}</div>
-                    </div>
+      if (filtered.length === 0) {
+    list.innerHTML = `
+        <div class="no-results">
+            <p>😕 No universities found</p>
+            <p>Try selecting a wider region, a different program, or removing the language filter.</p>
+        </div>
+    `;
+} else {
+    list.innerHTML = filtered.map(u => `
+        <div class="uni-card">
+            <div class="card-top">
+                <div>
+                    <div class="uni-name">${u.name}</div>
+                    <div class="uni-city">${u.city}, ${u.country}</div>
                 </div>
-                <div class="card-meta">
-                    <div class="meta-item"><span class="meta-label">Tuition (EU)</span><span class="meta-val">€${u.cost_eu || '—'}</span></div>
-                    <div class="meta-item"><span class="meta-label">GPA Requirement</span><span class="meta-val">${u.gpa_krav}</span></div>
-                </div>
-                <a class="card-link" href="${u.url}" target="_blank">Visit University →</a>
             </div>
-        `).join('');
+            <div class="card-meta">
+                <div class="meta-item"><span class="meta-label">Tuition (EU)</span><span class="meta-val">€${u.cost_eu || '—'}</span></div>
+                <div class="meta-item"><span class="meta-label">GPA Requirement</span><span class="meta-val">${u.gpa_krav}</span></div>
+            </div>
+            <a class="card-link" href="${u.url}" target="_blank">Visit University →</a>
+        </div>
+    `).join('');
+
+    document.querySelectorAll('.uni-card').forEach((c, i) => {
+        c.style.animation = `fadeUp 0.6s ease-out ${i * 0.1}s forwards`;
+    });
+}
 
         document.querySelectorAll('.uni-card').forEach((c, i) => {
             c.style.animation = `fadeUp 0.6s ease-out ${i * 0.1}s forwards`;
