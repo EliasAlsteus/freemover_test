@@ -331,12 +331,19 @@
 </nav>
 
 <section class="hero">
-    <p class="hero-label">Exchange studies, simplified</p>
-    <h1 class="hero-title">Find your <em>perfect</em><br><span class="animated-text">exchange university</span></h1>
-    <p class="hero-sub">Go beyond partner lists. Explore global freemover opportunities tailored to your degree.</p>
-    <div class="hero-info">
-        <strong>About this tool:</strong> UniMatchr helps you navigate freemover opportunities worldwide. Note: As a freemover, you apply independently and usually pay tuition fees.
-    </div>
+  <p class="hero-label">For freemover students</p>
+  <h1>
+    Stop scrolling through<br>
+    <em>endless university lists</em>
+  </h1>
+  <p class="hero-sub">
+    UniMatchr matches you with universities worldwide based on your degree —
+    including freemover options your home university never told you about.
+  </p>
+  <div class="hero-info">
+    <strong>What's a freemover?</strong> You apply directly to a university abroad —
+    not through an exchange agreement. More freedom, more options, usually tuition fees apply.
+  </div>
 </section>
 
 <section class="search-section">
@@ -386,26 +393,44 @@
 </section>
 
 <section class="featured-section">
-    <div class="featured-label">Curated Destinations</div>
-    <div class="featured-grid">
-        <a href="#" class="feat-item">
-            <img src="https://images.unsplash.com/photo-1526481280693-3bfa75ac8efd?auto=format&fit=crop&q=80&w=800" class="feat-img" alt="Japan">
-            <div class="feat-overlay"></div>
-            <div class="feat-content">
-                <div class="feat-name">Waseda University</div>
-                <div class="feat-city">Tokyo, Japan</div>
-            </div>
-        </a>
-        <a href="#" class="feat-item">
-            <img src="https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&q=80&w=800" class="feat-img" alt="London">
-            <div class="feat-overlay"></div>
-            <div class="feat-content">
-                <div class="feat-name">King's College London</div>
-                <div class="feat-city">London, UK</div>
-            </div>
-        </a>
-    </div>
-</section>
+  <div class="featured-label">Featured Universities</div>
+  <div class="featured-grid">
+ 
+    <a href="https://www.unimelb.edu.au/" target="_blank" class="feat-item">
+      <img src="images/melbourne.jpg" class="feat-img" alt="Melbourne">
+      <div class="feat-overlay"></div>
+      <div class="feat-content">
+        <div class="feat-name">University of Melbourne</div>
+        <div class="feat-city">Melbourne, Australia</div>
+      </div>
+    </a>
+ 
+    <a href="https://liu.se/en/" target="_blank" class="feat-item">
+      <img src="images/linkoping.jpg" class="feat-img" alt="Linköping">
+      <div class="feat-overlay"></div>
+      <div class="feat-content">
+        <div class="feat-name">Linköping University</div>
+        <div class="feat-city">Linköping, Sweden</div>
+      </div>
+    </a>
+ 
+    <a href="https://www.su.ac.za/en" target="_blank" class="feat-item">
+      <img src="images/stellenbosch.jpg" class="feat-img" alt="Stellenbosch">
+      <div class="feat-overlay"></div>
+      <div class="feat-content">
+        <div class="feat-name">Stellenbosch University</div>
+        <div class="feat-city">Stellenbosch, South Africa</div>
+      </div>
+    </a>
+ 
+    <a href="https://www.ethz.ch/" target="_blank" class="feat-item">
+      <img src="images/zurich.jpg" class="feat-img" alt="Zurich">
+      <div class="feat-overlay"></div>
+      <div class="feat-content">
+        <div class="feat-name">ETH Zurich</div>
+        <div class="feat-city">Zurich, Switzerland</div>
+      </div>
+    </a>
 
 <div class="divider">
     <div class="divider-line"></div>
@@ -530,12 +555,12 @@ function renderCard(u) {
             </div>
         </div>
         <div class="card-meta">
-            <div class="meta-item"><span class="meta-label">Tuition (EU)</span><span class="meta-val">${fmtCost(u.cost_eu)}</span></div>
-            <div class="meta-item"><span class="meta-label">Tuition (Non-EU)</span><span class="meta-val">${fmtCost(u.cost_non_eu)}</span></div>
-            <div class="meta-item"><span class="meta-label">GPA Requirement</span><span class="meta-val">${u.gpa_krav}</span></div>
-            <div class="meta-item"><span class="meta-label">Deadline HT</span><span class="meta-val">${u.deadline_ht}</span></div>
+            <div class="meta-item"><span class="meta-label">Tuition (EU)</span><span class="meta-val">{fmtCost(u.cost_eu)}</span></div>
+            <div class="meta-item"><span class="meta-label">Tuition (Non-EU)</span><span class="meta-val">{fmtCost(u.cost_non_eu)}</span></div>
+            <div class="meta-item"><span class="meta-label">GPA Requirement</span><span class="meta-val">{u.gpa_krav}</span></div>
+            <div class="meta-item"><span class="meta-label">Deadline HT</span><span class="meta-val">{u.deadline_ht}</span></div>
         </div>
-        ${u.anteckningar ? `<p style="margin-top:1rem; font-size:0.9rem; color:var(--text-muted); font-style:italic;">${u.anteckningar}</p>` : ''}
+        {u.anteckningar ? `<p style="margin-top:1rem; font-size:0.9rem; color:var(--text-muted); font-style:italic;">${u.anteckningar}</p>` : ''}
         <a class="card-link" href="${u.url}" target="_blank">Visit University →</a>
     </div>`;
 }
