@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UniMatchr</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght=0,400;0,500;1,400&family=DM+Mono:wght=400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -94,7 +94,7 @@ max-width: 480px;
 line-height: 1.7;
 }
 
-/* FEATURED SECTION FIX */
+/* --- FEATURED SECTION --- */
 .featured-section {
     max-width: 820px;
     margin: 4rem auto 2rem;
@@ -125,8 +125,7 @@ line-height: 1.7;
 .featured-item {
     position: relative;
     height: 240px;
-    /* Mörk bakgrund om bilden inte laddar */
-    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    background: #1a1a1a;
     border-radius: 6px;
     overflow: hidden;
     display: flex;
@@ -141,7 +140,6 @@ line-height: 1.7;
     transform: translateY(-4px);
     border-color: var(--accent);
 }
-/* Bildens styling */
 .featured-image {
     position: absolute;
     top: 0;
@@ -149,43 +147,55 @@ line-height: 1.7;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    opacity: 0.7; /* Grund-opacity för bilden */
+    opacity: 0.6;
     z-index: 1;
     transition: transform 0.5s ease, opacity 0.5s ease;
 }
-/* Hove-effekt på bilden */
 .featured-item:hover .featured-image {
-    transform: scale(1.1);
-    opacity: 0.9;
+    transform: scale(1.05);
+    opacity: 0.75;
 }
-/* Gradient-overlay som ALLTID gör texten tydlig och ljus */
 .featured-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.5) 40%, rgba(0,0,0,0.1) 70%, transparent 100%);
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 50%, transparent 100%);
     z-index: 2;
 }
-/* Textinnehållet på bilden */
+
+/* PARTNER BADGE */
+.partner-badge {
+    position: absolute;
+    top: 12px;
+    right: -25px;
+    background: var(--accent);
+    color: #1a1a1a;
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    font-weight: 500;
+    padding: 4px 30px;
+    transform: rotate(45deg);
+    z-index: 4;
+}
+
 .feat-content {
     position: relative;
     z-index: 3;
-    color: #ffffff !important; /* Alltid vit text, viktigt! */
+    color: #ffffff;
 }
 .feat-name {
-    font-size: 1.25rem;
-    font-weight: 500;
+    font-size: 1.3rem;
+    font-weight: 400;
     margin-bottom: 0.2rem;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5); /* Skugga för tydlighet */
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 }
 .feat-location {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     font-style: italic;
-    opacity: 0.9;
-    margin-bottom: 1rem;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 1.2rem;
 }
 .feat-link {
     font-family: 'DM Mono', monospace;
@@ -195,7 +205,7 @@ line-height: 1.7;
     letter-spacing: 0.1em;
 }
 
-/* Resten av din sök-styling (oförändrad) */
+/* --- SEARCH & DIVIDER --- */
 .search-section { max-width: 820px; margin: 0 auto; padding: 0 2rem 1rem; }
 .search-grid-full { display: grid; border: 0.5px solid var(--border); border-radius: 4px 4px 0 0; overflow: hidden; margin-bottom: 1px; }
 .search-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; border: 0.5px solid var(--border); border-top: none; border-radius: 0 0 4px 4px; overflow: hidden; }
@@ -210,8 +220,6 @@ line-height: 1.7;
 .divider-text { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--text-dim); }
 
 .results { max-width: 820px; margin: 0 auto; padding: 0 2rem 6rem; }
-.uni-card { background: var(--bg-card); border: 0.5px solid var(--border); padding: 2rem; margin-bottom: 2rem; border-radius: 4px; }
-.card-link { color: var(--accent); text-decoration: none; font-family: 'DM Mono', monospace; font-size: 11px; }
 
 @media (max-width: 600px) {
     .search-grid-3, .featured-grid { grid-template-columns: 1fr; }
@@ -239,29 +247,26 @@ line-height: 1.7;
                 <option value="all">Show All Programs</option>
                 <optgroup label="Engineering & Tech">
                     <option value="Computer Science">Computer Science / IT</option>
-                    <option value="Mechanical Engineering">Mechanical Engineering</option>
-                </optgroup>
-                <optgroup label="Business">
-                    <option value="Business">International Business</option>
-                    <option value="Finance">Finance</option>
                 </optgroup>
             </select>
         </div>
     </div>
     <div class="search-grid-3">
-        <div class="field"><label>Continent</label><select id="sel-continent" onchange="updateCountryDropdown()"><option value="all">All</option></select></div>
+        <div class="field"><label>Continent</label><select id="sel-continent"><option value="all">All</option></select></div>
         <div class="field"><label>Country</label><select id="sel-country"><option value="all">All</option></select></div>
-        <div class="field"><label>Language</label><select id="sel-lang"><option value="all">All</option><option value="English">English</option></select></div>
+        <div class="field"><label>Language</label><select id="sel-lang"><option value="all">All</option></select></div>
     </div>
-    <button class="search-btn" id="search-btn" onclick="runSearch()">Search Universities →</button>
+    <button class="search-btn">Search Universities →</button>
 </section>
 
 <section class="featured-section">
     <div class="featured-label">Featured Universities</div>
     <div class="featured-grid">
+        
         <a href="https://www.unimelb.edu.au/" target="_blank" class="featured-item">
-            <img src="https://source.unsplash.com/600x400/?melbourne" class="featured-image" alt="Melbourne University">
+            <img src="https://images.unsplash.com/photo-1514395495938-b1c72b83b2df?q=80&w=1000&auto=format&fit=crop" class="featured-image" alt="Melbourne">
             <div class="featured-overlay"></div>
+            <div class="partner-badge">PARTNER</div>
             <div class="feat-content">
                 <div class="feat-name">University of Melbourne</div>
                 <div class="feat-location">Melbourne, Australia</div>
@@ -270,8 +275,9 @@ line-height: 1.7;
         </a>
 
         <a href="https://www.nus.edu.sg/" target="_blank" class="featured-item">
-            <img src="https://source.unsplash.com/600x400/?singapore-city" class="featured-image" alt="National University of Singapore">
+            <img src="https://images.unsplash.com/photo-1525625293386-3fb0ad7c13f3?q=80&w=1000&auto=format&fit=crop" class="featured-image" alt="Singapore">
             <div class="featured-overlay"></div>
+            <div class="partner-badge">PARTNER</div>
             <div class="feat-content">
                 <div class="feat-name">National University of Singapore</div>
                 <div class="feat-location">Singapore, Singapore</div>
@@ -280,8 +286,9 @@ line-height: 1.7;
         </a>
 
         <a href="https://www.ubc.ca/" target="_blank" class="featured-item">
-            <img src="https://source.unsplash.com/600x400/?vancouver" class="featured-image" alt="University of British Columbia">
+            <img src="https://images.unsplash.com/photo-1559511260-66a654ae982a?q=80&w=1000&auto=format&fit=crop" class="featured-image" alt="Vancouver">
             <div class="featured-overlay"></div>
+            <div class="partner-badge">PARTNER</div>
             <div class="feat-content">
                 <div class="feat-name">University of British Columbia</div>
                 <div class="feat-location">Vancouver, Canada</div>
@@ -290,8 +297,9 @@ line-height: 1.7;
         </a>
 
         <a href="https://www.ethz.ch/en.html" target="_blank" class="featured-item">
-            <img src="https://source.unsplash.com/600x400/?zurich" class="featured-image" alt="ETH Zurich">
+            <img src="https://images.unsplash.com/photo-1527668752968-14dc70a2745c?q=80&w=1000&auto=format&fit=crop" class="featured-image" alt="Zurich">
             <div class="featured-overlay"></div>
+            <div class="partner-badge">PARTNER</div>
             <div class="feat-content">
                 <div class="feat-name">ETH Zurich</div>
                 <div class="feat-location">Zurich, Switzerland</div>
@@ -303,62 +311,17 @@ line-height: 1.7;
 
 <div class="divider">
 <div class="divider-line"></div>
-<div class="divider-text" id="divider-label">Loading database...</div>
+<div class="divider-text" id="divider-label">Ready to search</div>
 <div class="divider-line"></div>
 </div>
 
 <section class="results">
-<div id="results-header" class="results-header" style="display:none">
-<h2>Compatible Universities</h2>
-<span id="results-count"></span>
-</div>
-<div id="uni-list"></div>
+    <div id="uni-list"></div>
 </section>
 
 <footer>
 <span>UniMatchr © 2026</span>
-<span>Data synced: <span id="last-sync">...</span></span>
 </footer>
 
-<script>
-// Din JavaScript (CSV-data laddning) förblir densamma
-let universities = [];
-const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTAa9qeWsvV_sYuZ5m8-2t-3N08Y2sN1_au0tEZqBYWzFRJP9NGLTxZKSN40y-Sq6HoDbWH-iO80bPT/pub?output=csv';
-
-async function fetchAndUpdateData() {
-    try {
-        const response = await fetch(CSV_URL);
-        const csvText = await response.text();
-        const rows = csvText.split('\n').slice(1);
-        universities = rows.map(r => {
-            const cols = r.split(',');
-            return { name: cols[1], country: cols[2], continent: cols[18], subjects: cols[17] || '' };
-        });
-        updateDropdowns();
-        document.getElementById('divider-label').textContent = universities.length + ' universities available';
-        document.getElementById('last-sync').textContent = new Date().toLocaleTimeString();
-    } catch (e) { console.error(e); }
-}
-
-function updateDropdowns() {
-    const conts = [...new Set(universities.map(u => u.continent))].filter(Boolean).sort();
-    const sel = document.getElementById('sel-continent');
-    conts.forEach(c => sel.innerHTML += `<option value="${c}">${c}</option>`);
-}
-
-function updateCountryDropdown() { /* Implementera filtrering här */ }
-
-function runSearch() {
-    const btn = document.getElementById('search-btn');
-    btn.innerHTML = 'Searching...';
-    setTimeout(() => {
-        document.getElementById('results-header').style.display = 'flex';
-        document.getElementById('uni-list').innerHTML = '<p style="text-align:center; padding:2rem; color:var(--text-dim);">Datan laddas från din Google Sheet...</p>';
-        btn.innerHTML = 'Search Universities →';
-    }, 500);
-}
-
-window.onload = fetchAndUpdateData;
-</script>
 </body>
 </html>
