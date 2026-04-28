@@ -458,34 +458,66 @@
 
 <script>
 let universities = [];
+
 let currentFilter = 'all';
+
+let searched = false;
+
 const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTAa9qeWsvV_sYuZ5m8-2t-3N08Y2sN1_au0tEZqBYWzFRJP9NGLTxZKSN40y-Sq6HoDbWH-iO80bPT/pub?output=csv';
 
+
+
 function parseCSV(csvText) {
-    const rows = [];
-    let currentRow = [], currentField = '', insideQuotes = false;
-    for (let i = 0; i < csvText.length; i++) {
-        const char = csvText[i], nextChar = csvText[i + 1];
-        if (char === '"') {
-            if (insideQuotes && nextChar === '"') { currentField += '"'; i++; }
-            else insideQuotes = !insideQuotes;
-        } else if (char === ',' && !insideQuotes) {
-            currentRow.push(currentField.trim()); currentField = '';
-        } else if ((char === '\n' || char === '\r') && !insideQuotes) {
-            if (currentField || currentRow.length > 0) {
-                currentRow.push(currentField.trim());
-                if (currentRow.some(f => f)) rows.push(currentRow);
-                currentRow = []; currentField = '';
-            }
-            if (char === '\r' && nextChar === '\n') i++;
-        } else { currentField += char; }
-    }
-    if (currentField || currentRow.length > 0) {
-        currentRow.push(currentField.trim());
-        if (currentRow.some(f => f)) rows.push(currentRow);
-    }
-    return rows;
+
+const rows = [];
+
+let currentRow = [], currentField = '', insideQuotes = false;
+
+for (let i = 0; i < csvText.length; i++) {
+
+const char = csvText[i], nextChar = csvText[i + 1];
+
+if (char === '"') {
+
+if (insideQuotes && nextChar === '"') { currentField += '"'; i++; }
+
+else insideQuotes = !insideQuotes;
+
+} else if (char === ',' && !insideQuotes) {
+
+currentRow.push(currentField.trim()); currentField = '';
+
+} else if ((char === '\n' || char === '\r') && !insideQuotes) {
+
+if (currentField || currentRow.length > 0) {
+
+currentRow.push(currentField.trim());
+
+if (currentRow.some(f => f)) rows.push(currentRow);
+
+currentRow = []; currentField = '';
+
 }
+
+if (char === '\r' && nextChar === '\n') i++;
+
+} else { currentField += char; }
+
+}
+
+if (currentField || currentRow.length > 0) {
+
+currentRow.push(currentField.trim());
+
+if (currentRow.some(f => f)) rows.push(currentRow);
+
+}
+
+return rows;
+
+}
+
+
 
 function parseCSVToUniversities(csvText) {
     const rows = parseCSV(csvText);
