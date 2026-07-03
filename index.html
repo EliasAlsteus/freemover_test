@@ -52,28 +52,28 @@ body {
 
 /* ==================== AMBIENT LAYERS ==================== */
 .aurora { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+/* Soft edges come from the gradients themselves — a blur() filter here
+   forces the GPU to re-blur half the screen every frame */
 .aurora span {
     position: absolute;
     border-radius: 50%;
-    filter: blur(110px);
-    opacity: 0.55;
     will-change: transform;
 }
 .aurora .a1 {
     width: 55vw; height: 55vw;
-    background: radial-gradient(circle, rgba(216,189,138,0.14), transparent 65%);
+    background: radial-gradient(circle, rgba(216,189,138,0.10) 0%, rgba(216,189,138,0.05) 35%, transparent 70%);
     top: -20vw; right: -12vw;
     animation: drift1 26s ease-in-out infinite alternate;
 }
 .aurora .a2 {
     width: 45vw; height: 45vw;
-    background: radial-gradient(circle, rgba(133,184,164,0.11), transparent 65%);
+    background: radial-gradient(circle, rgba(133,184,164,0.08) 0%, rgba(133,184,164,0.04) 35%, transparent 70%);
     top: 30vh; left: -18vw;
     animation: drift2 32s ease-in-out infinite alternate;
 }
 .aurora .a3 {
     width: 38vw; height: 38vw;
-    background: radial-gradient(circle, rgba(199,132,90,0.09), transparent 65%);
+    background: radial-gradient(circle, rgba(199,132,90,0.07) 0%, rgba(199,132,90,0.035) 35%, transparent 70%);
     bottom: -15vw; right: 8vw;
     animation: drift3 38s ease-in-out infinite alternate;
 }
@@ -83,13 +83,19 @@ body {
 
 #stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
-.grain { position: fixed; inset: -50%; z-index: 3; pointer-events: none; opacity: 0.05;
+.grain { position: fixed; inset: 0; z-index: 3; pointer-events: none; opacity: 0.05;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
+/* A fixed-size glow moved with transform (composited) instead of a
+   full-screen gradient repainted every frame */
 #spotlight {
-    position: fixed; inset: 0; z-index: 1; pointer-events: none;
-    background: radial-gradient(560px circle at var(--sx, 50%) var(--sy, 30%), rgba(216,189,138,0.055), transparent 70%);
+    position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none;
+    width: 1100px; height: 1100px;
+    margin: -550px 0 0 -550px;
+    background: radial-gradient(circle, rgba(216,189,138,0.05) 0%, rgba(216,189,138,0.02) 40%, transparent 68%);
+    transform: translate3d(50vw, 30vh, 0);
+    will-change: transform;
 }
 
 main, nav, footer { position: relative; z-index: 4; }
@@ -177,7 +183,7 @@ h1 .w {
     display: inline-block;
     animation: wordUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
-@keyframes wordUp { from { opacity: 0; transform: translateY(0.55em) rotate(1.5deg); filter: blur(4px); } to { opacity: 1; transform: translateY(0) rotate(0); filter: blur(0); } }
+@keyframes wordUp { from { opacity: 0; transform: translateY(0.55em) rotate(1.5deg); } to { opacity: 1; transform: translateY(0) rotate(0); } }
 
 h1 em {
     font-style: italic;
@@ -233,11 +239,10 @@ h1 em {
     max-width: 560px;
     margin-top: 2.8rem;
     padding: 1.4rem 1.6rem;
-    background: var(--card);
+    background: var(--card-solid);
     border: 1px solid var(--border);
     border-left: 2px solid var(--gold);
     border-radius: 10px;
-    backdrop-filter: blur(6px);
     animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.95s both;
 }
 .hero-info strong { color: var(--gold-bright); font-weight: 500; }
@@ -299,11 +304,10 @@ h1 em {
 
 .search-panel {
     position: relative;
-    background: var(--card);
+    background: var(--card-solid);
     border: 1px solid var(--border);
     border-radius: 16px;
     padding: 1.6rem;
-    backdrop-filter: blur(8px);
     box-shadow: var(--shadow);
     overflow: hidden;
 }
@@ -543,15 +547,37 @@ h1 em {
     position: relative;
     border: 1px solid var(--border);
     border-radius: 14px;
-    padding: 1.8rem 2rem;
     margin-bottom: 1.4rem;
-    background: var(--card);
-    backdrop-filter: blur(6px);
+    background: var(--card-solid);
     overflow: hidden;
     opacity: 0;
     transform: translateY(28px);
     transition: border-color 0.35s, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s;
 }
+.card-banner {
+    position: relative;
+    height: 158px;
+    overflow: hidden;
+}
+.card-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0.82;
+    filter: saturate(0.88);
+    transform: scale(1.03);
+    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s, filter 0.5s;
+}
+.uni-card:hover .card-banner img { transform: scale(1.09); opacity: 1; filter: saturate(1); }
+.card-banner::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, var(--card-solid) 2%, rgba(26,24,20,0.25) 45%, rgba(26,24,20,0.05) 100%);
+    pointer-events: none;
+}
+.card-body { padding: 1.5rem 2rem 1.8rem; }
+.uni-card:not(:has(.card-banner)) .card-body { padding-top: 1.8rem; }
 .uni-card.in { animation: cardIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
 @keyframes cardIn { to { opacity: 1; transform: translateY(0); } }
 .uni-card:hover { border-color: rgba(216,189,138,0.4); box-shadow: 0 18px 44px rgba(0,0,0,0.35); }
@@ -816,6 +842,7 @@ footer .foot-logo { color: var(--muted); }
 
 <footer>
     <span class="foot-logo">UniMatchr © 2026</span>
+    <a href="https://github.com/EliasAlsteus/freemover_test/blob/main/images/cities/CREDITS.md" target="_blank" rel="noopener" style="color: inherit;">Photo credits</a>
     <span>Sync: <span id="last-sync">...</span></span>
 </footer>
 
@@ -973,13 +1000,26 @@ async function fetchAndUpdateData() {
 }
 
 /* ==================== SEARCH & RENDER ==================== */
+function citySlug(city) {
+    return city.normalize('NFKD')
+        .replace(/[̀-ͯ]/g, '')
+        .replace(/[^a-zA-Z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .toLowerCase();
+}
+
 function renderCard(u, i) {
     const fmtCost = c => c !== null ? '€' + c.toLocaleString() : '—';
     const tags = u.subjects
         ? `<div class="subj-tags">${u.subjects.split(',').map(s => s.trim()).filter(Boolean).slice(0, 6).map(s => `<span class="subj-tag">${esc(s)}</span>`).join('')}</div>`
         : '';
+    const banner = u.city
+        ? `<div class="card-banner"><img src="images/cities/${citySlug(u.city)}.jpg" alt="" loading="lazy" onerror="this.parentElement.remove()"></div>`
+        : '';
     return `
     <div class="uni-card glow-track" style="animation-delay:${Math.min(i * 0.07, 0.8)}s">
+        ${banner}
+        <div class="card-body">
         <div class="card-top">
             <div>
                 <div class="uni-name">${esc(u.name)}</div>
@@ -998,6 +1038,7 @@ function renderCard(u, i) {
         ${tags}
         ${u.anteckningar ? `<p class="card-notes">${esc(u.anteckningar)}</p>` : ''}
         ${u.url ? `<a class="card-link" href="${esc(u.url)}" target="_blank" rel="noopener">Visit University <span class="arrow">→</span></a>` : ''}
+        </div>
     </div>`;
 }
 
@@ -1056,26 +1097,28 @@ function setFilter(btn, type) {
 (function splitHeadline() {
     const h = document.getElementById('headline');
     let wordIndex = 0;
-    const wrap = node => {
-        [...node.childNodes].forEach(child => {
-            if (child.nodeType === Node.TEXT_NODE) {
-                const frag = document.createDocumentFragment();
-                child.textContent.split(/\s+/).filter(Boolean).forEach(word => {
-                    const span = document.createElement('span');
-                    span.className = 'w';
-                    span.textContent = word;
-                    span.style.animationDelay = (0.35 + wordIndex * 0.09) + 's';
-                    frag.appendChild(span);
-                    frag.appendChild(document.createTextNode(' '));
-                    wordIndex++;
-                });
-                node.replaceChild(frag, child);
-            } else if (child.nodeType === Node.ELEMENT_NODE) {
-                wrap(child);
-            }
-        });
-    };
-    wrap(h);
+    // Elements (the gradient <em>) are animated as one unit: wrapping their
+    // words in child spans breaks background-clip:text and makes the text
+    // invisible in Chromium.
+    [...h.childNodes].forEach(child => {
+        if (child.nodeType === Node.TEXT_NODE) {
+            const frag = document.createDocumentFragment();
+            child.textContent.split(/\s+/).filter(Boolean).forEach(word => {
+                const span = document.createElement('span');
+                span.className = 'w';
+                span.textContent = word;
+                span.style.animationDelay = (0.35 + wordIndex * 0.09) + 's';
+                frag.appendChild(span);
+                frag.appendChild(document.createTextNode(' '));
+                wordIndex++;
+            });
+            h.replaceChild(frag, child);
+        } else if (child.nodeType === Node.ELEMENT_NODE) {
+            child.classList.add('w');
+            child.style.animationDelay = (0.35 + wordIndex * 0.09) + 's';
+            wordIndex += child.textContent.split(/\s+/).filter(Boolean).length;
+        }
+    });
 })();
 
 /* ==================== SCROLL REVEAL ==================== */
@@ -1100,14 +1143,21 @@ document.addEventListener('mousemove', e => {
     }
 }, { passive: true });
 
+// Lerp loop that puts itself to sleep once it has caught up with the
+// cursor, so nothing runs while the mouse is still.
+let spotAnimating = false;
+function spotLoop() {
+    const dx = mouseX - spotX, dy = mouseY - spotY;
+    if (Math.abs(dx) < 0.5 && Math.abs(dy) < 0.5) { spotAnimating = false; return; }
+    spotX += dx * 0.08;
+    spotY += dy * 0.08;
+    spotlight.style.transform = `translate3d(${spotX}px, ${spotY}px, 0)`;
+    requestAnimationFrame(spotLoop);
+}
 if (!prefersReduced) {
-    (function spotLoop() {
-        spotX += (mouseX - spotX) * 0.07;
-        spotY += (mouseY - spotY) * 0.07;
-        spotlight.style.setProperty('--sx', spotX + 'px');
-        spotlight.style.setProperty('--sy', spotY + 'px');
-        requestAnimationFrame(spotLoop);
-    })();
+    document.addEventListener('mousemove', () => {
+        if (!spotAnimating) { spotAnimating = true; requestAnimationFrame(spotLoop); }
+    }, { passive: true });
 }
 
 document.querySelectorAll('.tilt').forEach(card => {
@@ -1154,7 +1204,7 @@ document.querySelectorAll('.tilt').forEach(card => {
     function resize() {
         W = canvas.width = innerWidth;
         H = canvas.height = innerHeight;
-        const target = Math.min(90, Math.floor(W * H / 22000));
+        const target = Math.min(55, Math.floor(W * H / 32000));
         pts = Array.from({ length: target }, () => ({
             x: Math.random() * W,
             y: Math.random() * H,
