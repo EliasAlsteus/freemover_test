@@ -417,6 +417,83 @@ h1 em {
 .loading-spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(23,20,14,0.25); border-top-color: #17140e; border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* ==================== JOURNEY (scroll-driven flight) ==================== */
+.journey { position: relative; height: 380vh; }
+.journey-sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+}
+.journey-inner { width: min(1060px, 94vw); margin: 0 auto; }
+.journey-head { text-align: center; margin-bottom: 1rem; }
+.journey-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.6rem, 3.4vw, 2.4rem);
+    font-weight: 380;
+    margin-top: 0.4rem;
+}
+.journey-title em { font-style: italic; color: var(--gold-bright); }
+.journey-map { position: relative; width: 100%; aspect-ratio: 1000 / 520; max-height: 68vh; }
+.journey-map svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+
+.flight-bg { fill: none; stroke: rgba(233,222,199,0.13); stroke-width: 1.5; stroke-dasharray: 3 9; stroke-linecap: round; }
+#flight-path { fill: none; stroke: var(--gold); stroke-width: 2; stroke-linecap: round; }
+
+.stop-dot { fill: #0f0e0c; stroke: rgba(233,222,199,0.35); stroke-width: 1.5; transition: fill 0.4s, stroke 0.4s; }
+.stop-ring { fill: none; stroke: var(--gold); opacity: 0; }
+.stop.reached .stop-dot { fill: var(--gold); stroke: var(--gold-bright); }
+.stop.reached .stop-ring { animation: stopPing 1s ease-out; }
+@keyframes stopPing { 0% { opacity: 0.8; transform: scale(1); } 100% { opacity: 0; transform: scale(3.2); } }
+.stop-ring { transform-origin: center; transform-box: fill-box; }
+
+#plane path { fill: var(--gold-bright); }
+#plane .plane-glow { fill: rgba(216,189,138,0.22); }
+
+.journey-stage { position: relative; }
+.journey-cards { position: absolute; inset: 0; pointer-events: none; }
+.step-card {
+    position: absolute;
+    width: 188px;
+    padding: 0.85rem 1rem;
+    background: var(--card-solid);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1), transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.4s;
+}
+/* Hand-placed in the empty pockets around the flight path */
+.step-card:nth-child(1) { left: 15%;   top: 60%; }
+.step-card:nth-child(2) { left: 41%;   top: 60%; }
+.step-card:nth-child(3) { left: 63.5%; top: 64%; }
+.step-card:nth-child(4) { left: 77%;   top: 34%; }
+.step-card.reached { opacity: 1; transform: translateY(0); border-color: rgba(216,189,138,0.35); }
+.step-num { font-family: 'DM Mono', monospace; font-size: 9.5px; letter-spacing: 0.18em; color: var(--gold); }
+.step-title { font-family: 'Fraunces', serif; font-size: 1.05rem; font-weight: 450; margin: 3px 0 4px; }
+.step-text { font-size: 0.82rem; line-height: 1.5; color: var(--muted); }
+
+.journey.static { height: auto; padding: 4rem 0; }
+.journey.static .journey-sticky { position: static; height: auto; overflow: visible; }
+
+/* Narrow screens: cards dock in a grid under the map instead of floating */
+@media (max-width: 959px) {
+    .journey { height: 300vh; }
+    .journey-map { max-height: 42vh; }
+    .journey-cards {
+        position: static;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 1rem;
+    }
+    .step-card { position: static; width: auto; }
+    .step-text { font-size: 0.78rem; }
+}
+
 /* ==================== FEATURED ==================== */
 .featured-section { max-width: 900px; margin: 0 auto 5.5rem; padding: 0 2rem; }
 .featured-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.4rem; perspective: 1200px; }
@@ -770,6 +847,52 @@ footer .foot-logo { color: var(--muted); }
             </div>
         </div>
         <button class="search-btn" id="search-btn" onclick="runSearch()">Search Universities <span class="arrow">→</span></button>
+    </div>
+</section>
+
+<section class="journey" id="journey">
+    <div class="journey-sticky">
+        <div class="journey-inner">
+            <div class="journey-head">
+                <div class="section-label">How it works</div>
+                <h2 class="journey-title">Your route to <em>studying abroad</em></h2>
+            </div>
+            <div class="journey-stage">
+                <div class="journey-map" id="journey-map">
+                    <svg viewBox="0 0 1000 520" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                        <path class="flight-bg" d="M 50,430 C 250,400 230,170 480,190 S 780,400 950,140" />
+                        <path id="flight-path" d="M 50,430 C 250,400 230,170 480,190 S 780,400 950,140" />
+                        <g id="journey-stops"></g>
+                        <g id="plane">
+                            <circle class="plane-glow" r="16" />
+                            <path d="M 12,0 L -10,8 L -4,0 L -10,-8 Z" />
+                        </g>
+                    </svg>
+                </div>
+                <div class="journey-cards" id="journey-cards">
+                    <div class="step-card">
+                        <div class="step-num">STEP 01</div>
+                        <div class="step-title">Tell us your field</div>
+                        <div class="step-text">Choose your program and where in the world you want to study.</div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-num">STEP 02</div>
+                        <div class="step-title">We match you</div>
+                        <div class="step-text">See every university in the database that takes freemovers in your field.</div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-num">STEP 03</div>
+                        <div class="step-title">Compare the details</div>
+                        <div class="step-text">Tuition, GPA requirements, language tests and deadlines — side by side.</div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-num">STEP 04</div>
+                        <div class="step-title">Apply directly &amp; fly</div>
+                        <div class="step-text">No exchange agreement needed. You apply, you get in, you go.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -1255,6 +1378,70 @@ document.querySelectorAll('.tilt').forEach(card => {
         requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
+})();
+
+/* ==================== JOURNEY (scroll-scrubbed flight) ==================== */
+(function journey() {
+    const section = document.getElementById('journey');
+    const path = document.getElementById('flight-path');
+    const plane = document.getElementById('plane');
+    const stopsGroup = document.getElementById('journey-stops');
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const L = path.getTotalLength();
+
+    const FRACTIONS = [0.04, 0.37, 0.68, 0.985];
+    const cards = document.querySelectorAll('#journey-cards .step-card');
+
+    // Build a stop dot on the path for each step; cards live in static HTML
+    const anchors = FRACTIONS.map((f, i) => {
+        const pt = path.getPointAtLength(f * L);
+        const g = document.createElementNS(svgNS, 'g');
+        g.setAttribute('class', 'stop');
+        const ring = document.createElementNS(svgNS, 'circle');
+        ring.setAttribute('class', 'stop-ring');
+        ring.setAttribute('cx', pt.x); ring.setAttribute('cy', pt.y); ring.setAttribute('r', 7);
+        const dot = document.createElementNS(svgNS, 'circle');
+        dot.setAttribute('class', 'stop-dot');
+        dot.setAttribute('cx', pt.x); dot.setAttribute('cy', pt.y); dot.setAttribute('r', 6);
+        g.appendChild(ring); g.appendChild(dot);
+        stopsGroup.appendChild(g);
+        return { g, card: cards[i], len: f * L };
+    });
+
+    path.style.strokeDasharray = L;
+
+    function setProgress(p) {
+        const d = p * L;
+        path.style.strokeDashoffset = L - d;
+        const pt = path.getPointAtLength(d);
+        const ahead = path.getPointAtLength(Math.min(d + 2, L));
+        const deg = Math.atan2(ahead.y - pt.y, ahead.x - pt.x) * 180 / Math.PI;
+        plane.setAttribute('transform', `translate(${pt.x},${pt.y}) rotate(${deg})`);
+        anchors.forEach(a => {
+            const reached = d >= a.len - 1;
+            a.g.classList.toggle('reached', reached);
+            a.card.classList.toggle('reached', reached);
+        });
+    }
+
+    if (prefersReduced) {
+        section.classList.add('static');
+        setProgress(1);
+        return;
+    }
+
+    let ticking = false;
+    function update() {
+        const rect = section.getBoundingClientRect();
+        const total = section.offsetHeight - innerHeight;
+        const p = Math.min(Math.max(-rect.top / total, 0), 1);
+        setProgress(p);
+    }
+    addEventListener('scroll', () => {
+        if (!ticking) { ticking = true; requestAnimationFrame(() => { update(); ticking = false; }); }
+    }, { passive: true });
+    addEventListener('resize', update);
+    update();
 })();
 
 /* ==================== INIT ==================== */
