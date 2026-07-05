@@ -814,42 +814,6 @@ footer .foot-logo { color: var(--muted); }
     <div class="marquee-track" id="marquee-track"></div>
 </div>
 
-<section class="search-section reveal">
-    <div class="section-label">Find your match</div>
-    <div class="search-panel glow-track">
-        <div class="search-grid-full">
-            <div class="field">
-                <label>What are you studying?</label>
-                <select id="sel-subject">
-                    <option value="all">Show All Programs</option>
-                </select>
-            </div>
-        </div>
-        <div class="search-grid-3">
-            <div class="field">
-                <label>Continent</label>
-                <select id="sel-continent" onchange="updateCountryDropdown()">
-                    <option value="all">All Continents</option>
-                </select>
-            </div>
-            <div class="field">
-                <label>Country</label>
-                <select id="sel-country">
-                    <option value="all">All Countries</option>
-                </select>
-            </div>
-            <div class="field">
-                <label>Language</label>
-                <select id="sel-lang">
-                    <option value="all">All</option>
-                    <option value="English">English</option>
-                </select>
-            </div>
-        </div>
-        <button class="search-btn" id="search-btn" onclick="runSearch()">Search Universities <span class="arrow">→</span></button>
-    </div>
-</section>
-
 <section class="journey" id="journey">
     <div class="journey-sticky">
         <div class="journey-inner">
@@ -893,6 +857,42 @@ footer .foot-logo { color: var(--muted); }
                 </div>
             </div>
         </div>
+    </div>
+</section>
+
+<section class="search-section reveal">
+    <div class="section-label">Find your match</div>
+    <div class="search-panel glow-track">
+        <div class="search-grid-full">
+            <div class="field">
+                <label>What are you studying?</label>
+                <select id="sel-subject">
+                    <option value="all">Show All Programs</option>
+                </select>
+            </div>
+        </div>
+        <div class="search-grid-3">
+            <div class="field">
+                <label>Continent</label>
+                <select id="sel-continent" onchange="updateCountryDropdown()">
+                    <option value="all">All Continents</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Country</label>
+                <select id="sel-country">
+                    <option value="all">All Countries</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>Language</label>
+                <select id="sel-lang">
+                    <option value="all">All</option>
+                    <option value="English">English</option>
+                </select>
+            </div>
+        </div>
+        <button class="search-btn" id="search-btn" onclick="runSearch()">Search Universities <span class="arrow">→</span></button>
     </div>
 </section>
 
