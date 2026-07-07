@@ -11,21 +11,21 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-    --bg: #0f0e0c;
-    --bg-2: #16140f;
-    --card: rgba(255, 252, 244, 0.032);
-    --card-solid: #1a1814;
-    --border: rgba(233, 222, 199, 0.11);
-    --border-strong: rgba(233, 222, 199, 0.28);
-    --text: #ede7da;
-    --muted: rgba(237, 231, 218, 0.52);
-    --dim: rgba(237, 231, 218, 0.28);
-    --gold: #d8bd8a;
-    --gold-bright: #efd9a7;
-    --gold-dim: rgba(216, 189, 138, 0.14);
-    --teal: #85b8a4;
-    --teal-dim: rgba(133, 184, 164, 0.13);
-    --shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+    --bg: #f3f1e9;
+    --bg-2: #e9e6db;
+    --card: rgba(255, 255, 255, 0.55);
+    --card-solid: #ffffff;
+    --border: rgba(38, 58, 42, 0.12);
+    --border-strong: rgba(38, 58, 42, 0.26);
+    --text: #1f2a22;
+    --muted: rgba(31, 42, 34, 0.60);
+    --dim: rgba(31, 42, 34, 0.40);
+    --gold: #3f7350;
+    --gold-bright: #4f9163;
+    --gold-dim: rgba(63, 115, 80, 0.14);
+    --teal: #6c9c86;
+    --teal-dim: rgba(108, 156, 134, 0.16);
+    --shadow: 0 24px 60px rgba(31, 46, 34, 0.14);
 }
 
 html { background: var(--bg); scroll-behavior: smooth; }
@@ -33,8 +33,8 @@ html { background: var(--bg); scroll-behavior: smooth; }
 body {
     font-family: 'EB Garamond', Georgia, serif;
     background:
-        radial-gradient(1200px 800px at 80% -10%, rgba(216,189,138,0.05), transparent 60%),
-        radial-gradient(900px 700px at 10% 30%, rgba(133,184,164,0.04), transparent 60%),
+        radial-gradient(1200px 800px at 80% -10%, rgba(79,145,99,0.10), transparent 60%),
+        radial-gradient(900px 700px at 10% 30%, rgba(108,156,134,0.08), transparent 60%),
         var(--bg);
     color: var(--text);
     min-height: 100vh;
@@ -43,12 +43,12 @@ body {
     overflow-x: hidden;
 }
 
-::selection { background: rgba(216,189,138,0.3); color: #fff; }
+::selection { background: rgba(79,145,99,0.28); color: #14201a; }
 
 ::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: #33302a; border-radius: 5px; }
-::-webkit-scrollbar-thumb:hover { background: #4a463d; }
+::-webkit-scrollbar-thumb { background: #cfd3c6; border-radius: 5px; }
+::-webkit-scrollbar-thumb:hover { background: #b3bba7; }
 
 /* ==================== AMBIENT LAYERS ==================== */
 .aurora { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
@@ -61,19 +61,19 @@ body {
 }
 .aurora .a1 {
     width: 55vw; height: 55vw;
-    background: radial-gradient(circle, rgba(216,189,138,0.10) 0%, rgba(216,189,138,0.05) 35%, transparent 70%);
+    background: radial-gradient(circle, rgba(79,145,99,0.12) 0%, rgba(79,145,99,0.06) 35%, transparent 70%);
     top: -20vw; right: -12vw;
     animation: drift1 26s ease-in-out infinite alternate;
 }
 .aurora .a2 {
     width: 45vw; height: 45vw;
-    background: radial-gradient(circle, rgba(133,184,164,0.08) 0%, rgba(133,184,164,0.04) 35%, transparent 70%);
+    background: radial-gradient(circle, rgba(108,156,134,0.11) 0%, rgba(108,156,134,0.05) 35%, transparent 70%);
     top: 30vh; left: -18vw;
     animation: drift2 32s ease-in-out infinite alternate;
 }
 .aurora .a3 {
     width: 38vw; height: 38vw;
-    background: radial-gradient(circle, rgba(199,132,90,0.07) 0%, rgba(199,132,90,0.035) 35%, transparent 70%);
+    background: radial-gradient(circle, rgba(163,176,96,0.10) 0%, rgba(163,176,96,0.05) 35%, transparent 70%);
     bottom: -15vw; right: 8vw;
     animation: drift3 38s ease-in-out infinite alternate;
 }
@@ -93,7 +93,7 @@ body {
     position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none;
     width: 1100px; height: 1100px;
     margin: -550px 0 0 -550px;
-    background: radial-gradient(circle, rgba(216,189,138,0.05) 0%, rgba(216,189,138,0.02) 40%, transparent 68%);
+    background: radial-gradient(circle, rgba(79,145,99,0.06) 0%, rgba(79,145,99,0.025) 40%, transparent 68%);
     transform: translate3d(50vw, 30vh, 0);
     will-change: transform;
 }
@@ -109,7 +109,7 @@ nav {
     border-bottom: 1px solid var(--border);
     position: sticky;
     top: 0;
-    background: rgba(15, 14, 12, 0.72);
+    background: rgba(243, 241, 233, 0.82);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     z-index: 100;
@@ -247,6 +247,122 @@ h1 em {
 }
 .hero-info strong { color: var(--gold-bright); font-weight: 500; }
 
+/* ==================== HERO (split magazine) — overrides above ==================== */
+.hero {
+    position: relative;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    height: clamp(560px, 84vh, 840px);
+    overflow: hidden;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+.hero-half { position: absolute; top: 0; bottom: 0; z-index: 1; }
+.hero-half-left {
+    left: 0; width: 48%;
+    background:
+        linear-gradient(rgba(240,242,233,0.55), rgba(240,242,233,0.60)),
+        url('images/stellenbosch.jpg') center/cover no-repeat;
+    filter: blur(7px) saturate(0.72) brightness(1.12);
+    transform: scale(1.07);
+}
+.hero-half-right {
+    right: 0; width: 54%;
+    background: url('images/stellenbosch.jpg') center 42% / cover no-repeat;
+    box-shadow: -1px 0 0 rgba(255,255,255,0.35);
+}
+/* soft light wash bottom-left so the panel text stays legible */
+.hero::after {
+    content: '';
+    position: absolute; left: 0; bottom: 0;
+    width: 62%; height: 78%;
+    background: linear-gradient(to top right, rgba(243,241,233,0.92) 8%, rgba(243,241,233,0.35) 48%, transparent 74%);
+    z-index: 2; pointer-events: none;
+}
+
+.hero-words {
+    position: absolute; inset: 0; z-index: 3; pointer-events: none;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 800; letter-spacing: -0.02em; line-height: 0.86;
+    text-transform: uppercase;
+}
+.hero-word { position: absolute; display: block; }
+.hero-word-uni {
+    top: 9%; left: 3.5%;
+    font-size: clamp(3.4rem, 15vw, 12.5rem);
+    color: transparent;
+    background: url('images/stellenbosch.jpg') center 30% / cover;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: brightness(0.94) contrast(1.05);
+    animation: heroWordIn 1s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+}
+.hero-word-matchr {
+    top: 33%; right: 2.5%;
+    font-size: clamp(2.9rem, 12.5vw, 10.5rem);
+    color: #f7f8f2;
+    text-shadow: 0 3px 34px rgba(18,28,20,0.30);
+    animation: heroWordIn 1s cubic-bezier(0.22, 1, 0.36, 1) 0.32s both;
+}
+@keyframes heroWordIn { from { opacity: 0; transform: translateY(0.22em); } to { opacity: 1; transform: translateY(0); } }
+
+.hero-panel {
+    position: absolute; z-index: 4;
+    left: clamp(1.4rem, 4vw, 4rem);
+    bottom: clamp(1.8rem, 5.5vh, 3.6rem);
+    max-width: 440px;
+    animation: fadeInUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both;
+}
+.hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 12px;
+}
+.hero-eyebrow::before { content: ''; width: 40px; height: 1px; background: var(--gold); }
+.hero-panel h1 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-size: clamp(1.85rem, 3.4vw, 2.9rem);
+    font-weight: 430; line-height: 1.12; letter-spacing: -0.01em;
+    color: var(--text); margin-bottom: 1rem;
+}
+.hero-panel h1 .w { display: inline-block; animation: wordUp 0.85s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.hero-lead {
+    font-size: 1.06rem; color: var(--muted); line-height: 1.7;
+    max-width: 410px; margin-bottom: 1.7rem;
+}
+.hero-cta {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text); text-decoration: none;
+    padding-bottom: 6px; border-bottom: 1px solid var(--gold);
+    transition: gap 0.3s, color 0.3s;
+}
+.hero-cta:hover { gap: 16px; color: var(--gold); }
+.hero-cta .arrow { transition: transform 0.3s; }
+.hero-cta:hover .arrow { transform: translateX(4px); }
+
+/* stats + freemover note now sit in a strip below the hero */
+.hero-stats-bar {
+    max-width: 900px; margin: 3.2rem auto 0; padding: 0 2rem;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 2.5rem; flex-wrap: wrap;
+}
+.hero-stats { display: flex; gap: 3rem; margin-top: 0; flex-wrap: wrap; animation: none; }
+
+@media (max-width: 720px) {
+    .hero { height: auto; min-height: 78vh; }
+    .hero-half-left { width: 100%; }
+    .hero-half-right { width: 100%; opacity: 0.55; }
+    .hero-word-matchr { right: auto; left: 3.5%; top: 22%; color: var(--text); text-shadow: none; }
+    .hero-panel { position: static; max-width: none; padding: 44vh 1.4rem 2.4rem; }
+    .hero::after { width: 100%; height: 100%; background: linear-gradient(to top, rgba(243,241,233,0.96) 30%, rgba(243,241,233,0.4) 60%, transparent 85%); }
+    .hero-stats-bar { justify-content: flex-start; }
+}
+
 /* ==================== MARQUEE ==================== */
 .marquee {
     border-top: 1px solid var(--border);
@@ -379,8 +495,8 @@ h1 em {
 .search-btn {
     position: relative;
     width: 100%;
-    background: linear-gradient(120deg, var(--gold-bright), var(--gold) 55%, #b8985e);
-    color: #17140e;
+    background: linear-gradient(120deg, var(--gold-bright), var(--gold) 55%, #2f5a3e);
+    color: #ffffff;
     border: none;
     padding: 1.1rem;
     font-family: 'DM Mono', monospace;
@@ -414,7 +530,7 @@ h1 em {
 }
 .search-btn:hover::after { left: 130%; }
 
-.loading-spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(23,20,14,0.25); border-top-color: #17140e; border-radius: 50%; animation: spin 0.8s linear infinite; }
+.loading-spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.35); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* ==================== JOURNEY (scroll-driven flight) ==================== */
@@ -440,10 +556,10 @@ h1 em {
 .journey-map { position: relative; width: 100%; aspect-ratio: 1000 / 520; max-height: 68vh; }
 .journey-map svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
 
-.flight-bg { fill: none; stroke: rgba(233,222,199,0.13); stroke-width: 1.5; stroke-dasharray: 3 9; stroke-linecap: round; }
+.flight-bg { fill: none; stroke: rgba(63,115,80,0.22); stroke-width: 1.5; stroke-dasharray: 3 9; stroke-linecap: round; }
 #flight-path { fill: none; stroke: var(--gold); stroke-width: 2; stroke-linecap: round; }
 
-.stop-dot { fill: #0f0e0c; stroke: rgba(233,222,199,0.35); stroke-width: 1.5; transition: fill 0.4s, stroke 0.4s; }
+.stop-dot { fill: var(--card-solid); stroke: rgba(63,115,80,0.4); stroke-width: 1.5; transition: fill 0.4s, stroke 0.4s; }
 .stop-ring { fill: none; stroke: var(--gold); opacity: 0; }
 .stop.reached .stop-dot { fill: var(--gold); stroke: var(--gold-bright); }
 .stop.reached .stop-ring { animation: stopPing 1s ease-out; }
@@ -451,7 +567,7 @@ h1 em {
 .stop-ring { transform-origin: center; transform-box: fill-box; }
 
 #plane path { fill: var(--gold-bright); }
-#plane .plane-glow { fill: rgba(216,189,138,0.22); }
+#plane .plane-glow { fill: rgba(79,145,99,0.25); }
 
 .journey-stage { position: relative; }
 .journey-cards { position: absolute; inset: 0; pointer-events: none; }
@@ -793,12 +909,24 @@ footer .foot-logo { color: var(--muted); }
 <main>
 
 <section class="hero">
-    <p class="hero-label">For freemover students</p>
-    <h1 id="headline">Stop scrolling through <em>endless university lists</em></h1>
-    <p class="hero-sub">
-        UniMatchr matches you with universities worldwide based on your degree —
-        including freemover options your home university never told you about.
-    </p>
+    <div class="hero-half hero-half-left"></div>
+    <div class="hero-half hero-half-right"></div>
+    <div class="hero-words" aria-hidden="true">
+        <span class="hero-word hero-word-uni">UNI</span>
+        <span class="hero-word hero-word-matchr">MATCHR</span>
+    </div>
+    <div class="hero-panel">
+        <p class="hero-eyebrow">Discover UniMatchr</p>
+        <h1 id="headline">Stop scrolling through endless university lists</h1>
+        <p class="hero-lead">
+            UniMatchr matches you with universities worldwide based on your degree —
+            including freemover options your home university never told you about.
+        </p>
+        <a class="hero-cta" href="#find">Get started <span class="arrow">→</span></a>
+    </div>
+</section>
+
+<section class="hero-stats-bar reveal">
     <div class="hero-stats">
         <div class="stat"><span class="stat-num" data-count id="stat-unis">0<sup>+</sup></span><span class="stat-label">Universities</span></div>
         <div class="stat"><span class="stat-num" data-count id="stat-countries">0</span><span class="stat-label">Countries</span></div>
@@ -860,7 +988,7 @@ footer .foot-logo { color: var(--muted); }
     </div>
 </section>
 
-<section class="search-section reveal">
+<section class="search-section reveal" id="find">
     <div class="section-label">Find your match</div>
     <div class="search-panel glow-track">
         <div class="search-grid-full">
