@@ -1095,7 +1095,7 @@ footer .foot-logo { color: var(--muted); }
     <div class="section-label">Featured Universities</div>
     <div class="featured-grid">
         <a href="https://www.auckland.ac.nz/en/study/international-students/study-options-for-international-students/study-abroad-and-exchange.html" target="_blank" rel="noopener" class="feat-item tilt">
-            <img src="images/cities/auckland.jpg" class="feat-img" alt="Auckland">
+            <img src="images/cities/auckland.jpg?v=2" class="feat-img" alt="Auckland">
             <div class="feat-overlay"></div>
             <div class="feat-shine"></div>
             <div class="feat-cta">→</div>
@@ -1105,7 +1105,7 @@ footer .foot-logo { color: var(--muted); }
             </div>
         </a>
         <a href="https://www.sydney.edu.au/study/study-options/study-abroad-at-sydney.html" target="_blank" rel="noopener" class="feat-item tilt">
-            <img src="images/cities/sydney.jpg" class="feat-img" alt="Sydney">
+            <img src="images/cities/sydney.jpg?v=2" class="feat-img" alt="Sydney">
             <div class="feat-overlay"></div>
             <div class="feat-shine"></div>
             <div class="feat-cta">→</div>
@@ -1115,7 +1115,7 @@ footer .foot-logo { color: var(--muted); }
             </div>
         </a>
         <a href="https://global.ed.ac.uk/study-abroad-in-edinburgh" target="_blank" rel="noopener" class="feat-item tilt">
-            <img src="images/cities/edinburgh.jpg" class="feat-img" alt="Edinburgh">
+            <img src="images/cities/edinburgh.jpg?v=2" class="feat-img" alt="Edinburgh">
             <div class="feat-overlay"></div>
             <div class="feat-shine"></div>
             <div class="feat-cta">→</div>
@@ -1125,7 +1125,7 @@ footer .foot-logo { color: var(--muted); }
             </div>
         </a>
         <a href="https://students.ubc.ca/enrolment/courses/non-degree-studies/non-degree-studies-visiting/" target="_blank" rel="noopener" class="feat-item tilt">
-            <img src="images/cities/vancouver.jpg" class="feat-img" alt="Vancouver">
+            <img src="images/cities/vancouver.jpg?v=2" class="feat-img" alt="Vancouver">
             <div class="feat-overlay"></div>
             <div class="feat-shine"></div>
             <div class="feat-cta">→</div>
@@ -1183,6 +1183,10 @@ let currentFilter = 'all';
 // Data now lives in the repo (data/universities.csv) — Claude can edit it via
 // commits and Elias via GitHub/Excel. Relative URL = same origin, no 5-min cache.
 const CSV_URL = 'data/universities.csv';
+
+// Bump when a city/university image is replaced — appended to image URLs so
+// browsers re-fetch changed images instead of serving a stale cached copy.
+const ASSET_V = '2';
 
 function parseCSV(csvText) {
     const rows = [];
@@ -1469,7 +1473,7 @@ function renderCard(u, i) {
         ? `<div class="subj-tags">${u.subjects.split(',').map(s => s.trim()).filter(Boolean).slice(0, 6).map(s => `<span class="subj-tag">${esc(s)}</span>`).join('')}</div>`
         : '';
     const banner = u.city
-        ? `<div class="card-banner"><img src="images/cities/${citySlug(u.city)}.jpg" alt="" loading="lazy" onerror="this.parentElement.remove()"></div>`
+        ? `<div class="card-banner"><img src="images/cities/${citySlug(u.city)}.jpg?v=${ASSET_V}" alt="" loading="lazy" onerror="this.parentElement.remove()"></div>`
         : '';
     return `
     <div class="uni-card" style="animation-delay:${Math.min(i * 0.07, 0.8)}s">
