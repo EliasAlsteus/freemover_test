@@ -809,6 +809,8 @@ h1 em {
     border-radius: 100px;
     white-space: nowrap;
 }
+.free-chip.limited { color: var(--gold-bright); background: var(--gold-dim); border-color: rgba(216,189,138,0.32); }
+.free-chip.no { color: var(--muted); background: rgba(255,255,255,0.04); border-color: var(--border); }
 
 .card-meta {
     display: grid;
@@ -1084,8 +1086,8 @@ footer .foot-logo { color: var(--muted); }
     </div>
     <div class="filters" id="filters" style="display:none">
         <button class="filter-btn active" onclick="setFilter(this,'all')">All</button>
-        <button class="filter-btn" onclick="setFilter(this,'cheapest')">Cheapest</button>
-        <button class="filter-btn" onclick="setFilter(this,'gpa')">GPA Requirement</button>
+        <button class="filter-btn" onclick="setFilter(this,'freemover')">Takes freemovers</button>
+        <button class="filter-btn" onclick="setFilter(this,'free')">Free tuition</button>
     </div>
     <div id="uni-list"></div>
 </section>
@@ -1106,7 +1108,9 @@ const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').mat
 let universities = [];
 let currentFilter = 'all';
 
-const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTAa9qeWsvV_sYuZ5m8-2t-3N08Y2sN1_au0tEZqBYWzFRJP9NGLTxZKSN40y-Sq6HoDbWH-iO80bPT/pub?output=csv';
+// Data now lives in the repo (data/universities.csv) — Claude can edit it via
+// commits and Elias via GitHub/Excel. Relative URL = same origin, no 5-min cache.
+const CSV_URL = 'data/universities.csv';
 
 function parseCSV(csvText) {
     const rows = [];
@@ -1134,38 +1138,30 @@ function parseCSV(csvText) {
     return rows;
 }
 
-// Columns are looked up by header name, so the sheet's column order can change freely.
+// Columns are looked up by header name, so their order in the CSV can change freely.
 function parseCSVToUniversities(csvText) {
     const rows = parseCSV(csvText);
     if (rows.length < 2) return [];
     const headers = rows[0];
     const col = name => headers.findIndex(h => h.toLowerCase() === name.toLowerCase());
     const idx = {
-        name: col('Namn'), country: col('Land'), city: col('Stad'), url: col('Webbplats'),
-        lang: col('Undervisningsspråk'), freemover: col('Accepterar freemovers'),
-        dlHt: col('Ansökningsdeadline (HT)'), dlVt: col('Ansökningsdeadline (VT)'),
-        costNonEu: col('Terminsavgift (EUR)'), costEu: col('Terminsavgift (EU-member) (EUR)'),
-        gpa: col('Min GPA-krav'), langReq: col('Språkkrav'),
-        notes: col('Anteckningar'), subjects: col('Subjects'), continent: col('Continent')
+        id: col('id'), name: col('name'), country: col('country'), city: col('city'),
+        continent: col('continent'), language: col('language'), freemover: col('freemover'),
+        cost: col('cost_band'), url: col('website'), subjects: col('subjects'), note: col('note')
     };
     const get = (row, i) => (i >= 0 && row[i]) ? row[i] : '';
-    const num = s => { const n = parseInt(String(s).replace(/[^0-9]/g, ''), 10); return isNaN(n) ? null : n; };
     return rows.slice(1).filter(r => get(r, idx.name)).map(r => ({
+        id: get(r, idx.id),
         name: get(r, idx.name),
         country: get(r, idx.country),
         city: get(r, idx.city),
+        continent: get(r, idx.continent) || 'Other',
+        language: get(r, idx.language),
+        freemover: get(r, idx.freemover),      // 'Yes' | 'No' | 'Limited'
+        cost_band: get(r, idx.cost),           // 'Free' | 'Low' | 'Medium' | 'High' | ''
         url: get(r, idx.url),
-        lang: get(r, idx.lang),
-        freemover: get(r, idx.freemover).toLowerCase() === 'yes',
-        deadline_ht: get(r, idx.dlHt) || '—',
-        deadline_vt: get(r, idx.dlVt) || '—',
-        cost_non_eu: num(get(r, idx.costNonEu)),
-        cost_eu: get(r, idx.costEu) !== '' ? num(get(r, idx.costEu)) : null,
-        gpa_krav: get(r, idx.gpa) || '—',
-        lang_req: get(r, idx.langReq) || '—',
-        anteckningar: get(r, idx.notes),
         subjects: get(r, idx.subjects),
-        continent: get(r, idx.continent) || 'Other'
+        note: get(r, idx.note)
     }));
 }
 
@@ -1233,7 +1229,7 @@ function buildMarquee() {
 /* ==================== FETCH ==================== */
 async function fetchAndUpdateData() {
     try {
-        const response = await fetch(CSV_URL + '&t=' + Date.now());
+        const response = await fetch(CSV_URL + '?t=' + Date.now());
         const csvText = await response.text();
         universities = parseCSVToUniversities(csvText);
         updateDropdowns();
@@ -1257,8 +1253,20 @@ function citySlug(city) {
         .toLowerCase();
 }
 
+function freemoverChip(status) {
+    const s = String(status).toLowerCase();
+    if (s === 'yes') return '<span class="free-chip yes">✓ Takes freemovers</span>';
+    if (s === 'limited') return '<span class="free-chip limited">~ Limited</span>';
+    if (s === 'no') return '<span class="free-chip no">✗ Not freemovers</span>';
+    return '';
+}
+
+function costBandLabel(b) {
+    const s = String(b).toLowerCase();
+    return ({ free: 'Free', low: 'Low', medium: 'Medium', high: 'High' })[s] || '—';
+}
+
 function renderCard(u, i) {
-    const fmtCost = c => c !== null ? '€' + c.toLocaleString() : '—';
     const tags = u.subjects
         ? `<div class="subj-tags">${u.subjects.split(',').map(s => s.trim()).filter(Boolean).slice(0, 6).map(s => `<span class="subj-tag">${esc(s)}</span>`).join('')}</div>`
         : '';
@@ -1274,19 +1282,15 @@ function renderCard(u, i) {
                 <div class="uni-name">${esc(u.name)}</div>
                 <div class="uni-city">${esc(u.city)}${u.city && u.country ? ', ' : ''}${esc(u.country)}</div>
             </div>
-            ${u.freemover ? '<span class="free-chip">✓ Freemover</span>' : ''}
+            ${freemoverChip(u.freemover)}
         </div>
         <div class="card-meta">
-            <div class="meta-item"><span class="meta-label">Tuition (EU)</span><span class="meta-val gold">${fmtCost(u.cost_eu)}</span></div>
-            <div class="meta-item"><span class="meta-label">Tuition (Non-EU)</span><span class="meta-val">${fmtCost(u.cost_non_eu)}</span></div>
-            <div class="meta-item"><span class="meta-label">GPA Requirement</span><span class="meta-val">${esc(u.gpa_krav)}</span></div>
-            <div class="meta-item"><span class="meta-label">Language Req.</span><span class="meta-val">${esc(u.lang_req)}</span></div>
-            <div class="meta-item"><span class="meta-label">Deadline HT</span><span class="meta-val">${esc(u.deadline_ht)}</span></div>
-            <div class="meta-item"><span class="meta-label">Deadline VT</span><span class="meta-val">${esc(u.deadline_vt)}</span></div>
+            <div class="meta-item"><span class="meta-label">Cost / semester</span><span class="meta-val gold">${costBandLabel(u.cost_band)}</span></div>
+            <div class="meta-item"><span class="meta-label">Language</span><span class="meta-val">${esc(u.language) || '—'}</span></div>
         </div>
         ${tags}
-        ${u.anteckningar ? `<p class="card-notes">${esc(u.anteckningar)}</p>` : ''}
-        ${u.url ? `<a class="card-link" href="${esc(u.url)}" target="_blank" rel="noopener">Visit University <span class="arrow">→</span></a>` : ''}
+        ${u.note ? `<p class="card-notes">${esc(u.note)}</p>` : ''}
+        ${u.url ? `<a class="card-link" href="${esc(u.url)}" target="_blank" rel="noopener">Details on their site <span class="arrow">→</span></a>` : ''}
         </div>
     </div>`;
 }
@@ -1321,8 +1325,8 @@ function runSearch() {
 
 function renderList(list) {
     let filtered = [...list];
-    if (currentFilter === 'cheapest') filtered.sort((a, b) => (a.cost_eu ?? 99999) - (b.cost_eu ?? 99999));
-    if (currentFilter === 'gpa') filtered = filtered.filter(u => u.gpa_krav !== '—');
+    if (currentFilter === 'freemover') filtered = filtered.filter(u => String(u.freemover).toLowerCase() === 'yes');
+    if (currentFilter === 'free') filtered = filtered.filter(u => String(u.cost_band).toLowerCase() === 'free');
 
     document.getElementById('results-count').textContent = filtered.length + (filtered.length === 1 ? ' university' : ' universities');
     const el = document.getElementById('uni-list');
