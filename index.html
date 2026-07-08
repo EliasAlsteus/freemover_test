@@ -113,9 +113,9 @@ nav {
     border-bottom: 1px solid var(--border);
     position: sticky;
     top: 0;
-    background: rgba(243, 241, 233, 0.82);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    /* Near-opaque instead of a blurred backdrop — a sticky backdrop-filter
+       repaints its whole strip on every scroll frame, which janked the long list */
+    background: rgba(245, 243, 236, 0.94);
     z-index: 100;
 }
 .logo {
@@ -711,9 +711,8 @@ h1 em {
     opacity: 0.6;
     transform: scale(1.06) translate(var(--px, 0), var(--py, 0));
     transition: opacity 0.5s, transform 0.4s ease-out;
-    filter: saturate(0.85);
 }
-.feat-item:hover .feat-img { opacity: 0.85; filter: saturate(1.05); }
+.feat-item:hover .feat-img { opacity: 0.85; }
 
 .feat-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(10,9,7,0.92) 0%, rgba(10,9,7,0.35) 50%, transparent 100%); z-index: 2; }
 .feat-shine {
@@ -820,6 +819,9 @@ h1 em {
     opacity: 0;
     transform: translateY(28px);
     transition: border-color 0.35s, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s;
+    /* Skip layout/paint for cards scrolled off-screen — big win with a long list */
+    content-visibility: auto;
+    contain-intrinsic-size: auto 480px;
 }
 .card-banner {
     position: relative;
@@ -831,12 +833,11 @@ h1 em {
     height: 100%;
     object-fit: cover;
     display: block;
-    opacity: 0.82;
-    filter: saturate(0.88);
+    opacity: 0.85;
     transform: scale(1.03);
-    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s, filter 0.5s;
+    transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s;
 }
-.uni-card:hover .card-banner img { transform: scale(1.09); opacity: 1; filter: saturate(1); }
+.uni-card:hover .card-banner img { transform: scale(1.09); opacity: 1; }
 .card-banner::after {
     content: '';
     position: absolute; inset: 0;
@@ -1468,7 +1469,7 @@ function renderCard(u, i) {
         ? `<div class="card-banner"><img src="images/cities/${citySlug(u.city)}.jpg" alt="" loading="lazy" onerror="this.parentElement.remove()"></div>`
         : '';
     return `
-    <div class="uni-card glow-track" style="animation-delay:${Math.min(i * 0.07, 0.8)}s">
+    <div class="uni-card" style="animation-delay:${Math.min(i * 0.07, 0.8)}s">
         ${banner}
         <div class="card-body">
         <div class="card-top">
