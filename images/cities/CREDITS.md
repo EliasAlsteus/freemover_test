@@ -25,3 +25,11 @@ City images sourced via Wikivoyage/Wikipedia page images (Wikimedia Commons).
 - **sydney.jpg** (Sydney, via en.wikivoyage.org): `File:Central_Sydney_Districts.png` - Torty3, CC BY-SA 3.0
 - **vancouver.jpg** (Vancouver, via en.wikivoyage.org): `File:Lions_Gate_Bridge_from_seawall_path.jpg` - Keely Hill, CC BY-SA 4.0
 - **cape-town.jpg** (Cape Town, via en.wikivoyage.org): `File:South_Africa-Cape_Town-Table_Mountain03.jpg` - Nick Roux, CC BY-SA 1.0
+- **leiden.jpg** (Leiden, via en.wikivoyage.org): `File:Morspoort-Leiden.jpg` - Erik Zachte, CC BY-SA 3.0
+- **maastricht.jpg** (Maastricht, via en.wikivoyage.org): `File:Maastricht_Aachen_Airport.jpg` - Bjorn van der Velpen, Public domain
+- **barcelona.jpg** (Barcelona, via en.wikivoyage.org): `File:14-08-06-barcelona-RalfR-015.jpg` - Ralf Roletschek, GFDL 1.2
+- **prague.jpg** (Prague, via en.wikivoyage.org): `File:Prague_districts_en_wv.jpg` - Prague_districts.svg: Kubiik
+derivative work: DavidSpanel (talk)
+Jjtkk, CC BY-SA 3.0
+- **melbourne.jpg** (Melbourne, via en.wikivoyage.org): `File:Wikivoyage_Melbourne_district_map.png` - Ypsilon from Finland, CC0
+- **dunedin.jpg** (Dunedin, via en.wikivoyage.org): `File:Dunedin_Panorama2.jpg` - User DLiebisch on de.wikipedia, Public domain

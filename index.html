@@ -424,12 +424,14 @@ h1 em {
 
 .search-panel {
     position: relative;
+    isolation: isolate;
     background: var(--card-solid);
     border: 1px solid var(--border);
     border-radius: 16px;
     padding: 1.6rem;
     box-shadow: var(--shadow);
-    overflow: hidden;
+    /* visible so custom dropdown panels can extend past the panel edge */
+    overflow: visible;
 }
 .search-panel::before {
     content: '';
@@ -481,20 +483,63 @@ h1 em {
     text-transform: uppercase;
     color: var(--dim);
 }
-.field select {
+/* --- Custom themed dropdown (replaces native <select>) --- */
+.cs-trigger {
     background: transparent;
     border: none;
     color: var(--text);
     font-family: 'EB Garamond', Georgia, serif;
     font-size: 16.5px;
+    text-align: left;
     outline: none;
     cursor: pointer;
-    appearance: none;
-    -webkit-appearance: none;
     width: 100%;
-    padding-right: 1.4rem;
+    padding: 0 1.4rem 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
-.field select option, .field select optgroup { background-color: #1a1814; color: var(--text); font-size: 15px; }
+.cs-trigger:focus-visible { color: var(--gold-bright); }
+
+.field.open { z-index: 50; }
+.field.open::after { border-color: var(--gold); transform: translateY(-25%) rotate(225deg); }
+
+.cs-panel {
+    position: absolute;
+    left: 0; right: 0; top: calc(100% + 7px);
+    z-index: 5;
+    background: var(--card-solid);
+    border: 1px solid var(--border-strong);
+    border-radius: 12px;
+    box-shadow: 0 22px 55px rgba(31, 46, 34, 0.20);
+    padding: 6px;
+    max-height: 288px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    opacity: 0;
+    transform: translateY(-6px) scale(0.985);
+    transform-origin: top center;
+    pointer-events: none;
+    transition: opacity 0.18s ease, transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.field.open .cs-panel { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+
+.cs-option {
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 15.5px;
+    color: var(--text);
+    padding: 9px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    transition: background 0.15s, color 0.15s;
+}
+.cs-option:hover, .cs-option.active { background: var(--gold-dim); color: var(--gold-bright); }
+.cs-option[aria-selected="true"] { color: var(--gold); font-weight: 500; }
+.cs-option[aria-selected="true"]::after { content: '✓'; font-size: 11px; color: var(--gold); }
 
 .search-btn {
     position: relative;
@@ -1002,25 +1047,22 @@ footer .foot-logo { color: var(--muted); }
     <div class="section-label">Find your match</div>
     <div class="search-panel glow-track">
         <div class="search-grid-full">
-            <div class="field">
+            <div class="field select-field" data-cs="subject">
                 <label>What are you studying?</label>
-                <select id="sel-subject">
-                    <option value="all">Show All Programs</option>
-                </select>
+                <button type="button" class="cs-trigger" id="sel-subject" data-value="all" aria-haspopup="listbox" aria-expanded="false">Show All Programs</button>
+                <div class="cs-panel" role="listbox" aria-label="Subject"></div>
             </div>
         </div>
         <div class="search-grid-2">
-            <div class="field">
+            <div class="field select-field" data-cs="continent">
                 <label>Continent</label>
-                <select id="sel-continent" onchange="updateCountryDropdown()">
-                    <option value="all">All Continents</option>
-                </select>
+                <button type="button" class="cs-trigger" id="sel-continent" data-value="all" aria-haspopup="listbox" aria-expanded="false">All Continents</button>
+                <div class="cs-panel" role="listbox" aria-label="Continent"></div>
             </div>
-            <div class="field">
+            <div class="field select-field" data-cs="country">
                 <label>Country</label>
-                <select id="sel-country">
-                    <option value="all">All Countries</option>
-                </select>
+                <button type="button" class="cs-trigger" id="sel-country" data-value="all" aria-haspopup="listbox" aria-expanded="false">All Countries</button>
+                <div class="cs-panel" role="listbox" aria-label="Country"></div>
             </div>
         </div>
         <button class="search-btn" id="search-btn" onclick="runSearch()">Search Universities <span class="arrow">→</span></button>
@@ -1169,33 +1211,102 @@ function esc(s) {
     return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
-/* ==================== DROPDOWNS (built from live data) ==================== */
-function fillSelect(select, values, allLabel) {
-    const current = select.value;
-    select.innerHTML = `<option value="all">${allLabel}</option>`;
-    values.forEach(v => {
-        const opt = document.createElement('option');
-        opt.value = opt.textContent = v;
-        select.appendChild(opt);
-    });
-    if ([...select.options].some(o => o.value === current)) select.value = current;
+/* ==================== CUSTOM DROPDOWNS (themed, built from live data) ==================== */
+function getSel(id) { return document.getElementById(id).dataset.value || 'all'; }
+
+function setSelValue(trigger, value, label) {
+    trigger.dataset.value = value;
+    trigger.textContent = label;
+    trigger.closest('.field').querySelector('.cs-panel')
+        .querySelectorAll('.cs-option')
+        .forEach(o => o.setAttribute('aria-selected', o.dataset.value === value ? 'true' : 'false'));
+}
+
+// Rebuild a dropdown's option list from data, preserving the current pick if still valid.
+function fillSelect(triggerId, values, allLabel) {
+    const trigger = document.getElementById(triggerId);
+    const panel = trigger.closest('.field').querySelector('.cs-panel');
+    const current = trigger.dataset.value || 'all';
+    const opts = [['all', allLabel], ...values.map(v => [v, v])];
+    panel.innerHTML = opts.map(([val, label]) =>
+        `<div class="cs-option" role="option" data-value="${esc(val)}" aria-selected="false">${esc(label)}</div>`).join('');
+    const keep = opts.find(([v]) => v === current) || opts[0];
+    setSelValue(trigger, keep[0], keep[1]);
 }
 
 function updateDropdowns() {
     const continents = [...new Set(universities.map(u => u.continent))].filter(Boolean).sort();
-    fillSelect(document.getElementById('sel-continent'), continents, 'All Continents');
+    fillSelect('sel-continent', continents, 'All Continents');
 
     const subjects = [...new Set(universities.flatMap(u => u.subjects.split(',').map(s => s.trim())))].filter(Boolean).sort();
-    fillSelect(document.getElementById('sel-subject'), subjects, 'Show All Programs');
+    fillSelect('sel-subject', subjects, 'Show All Programs');
 
     updateCountryDropdown();
 }
 
 function updateCountryDropdown() {
-    const selectedContinent = document.getElementById('sel-continent').value;
+    const selectedContinent = getSel('sel-continent');
     const filtered = selectedContinent === 'all' ? universities : universities.filter(u => u.continent === selectedContinent);
     const countries = [...new Set(filtered.map(u => u.country))].filter(Boolean).sort();
-    fillSelect(document.getElementById('sel-country'), countries, 'All Countries');
+    fillSelect('sel-country', countries, 'All Countries');
+}
+
+/* open/close + keyboard for the custom dropdowns */
+function closeAllSelects(except) {
+    document.querySelectorAll('.field.open').forEach(f => {
+        if (f !== except) {
+            f.classList.remove('open');
+            f.querySelector('.cs-trigger').setAttribute('aria-expanded', 'false');
+        }
+    });
+}
+
+function initCustomSelects() {
+    document.querySelectorAll('.select-field').forEach(field => {
+        const trigger = field.querySelector('.cs-trigger');
+        const panel = field.querySelector('.cs-panel');
+
+        trigger.addEventListener('click', e => {
+            e.stopPropagation();
+            const willOpen = !field.classList.contains('open');
+            closeAllSelects(field);
+            field.classList.toggle('open', willOpen);
+            trigger.setAttribute('aria-expanded', String(willOpen));
+            if (willOpen) {
+                panel.querySelectorAll('.cs-option.active').forEach(o => o.classList.remove('active'));
+                const sel = panel.querySelector('.cs-option[aria-selected="true"]');
+                if (sel) sel.scrollIntoView({ block: 'nearest' });
+            }
+        });
+
+        panel.addEventListener('click', e => {
+            const opt = e.target.closest('.cs-option');
+            if (!opt) return;
+            setSelValue(trigger, opt.dataset.value, opt.textContent);
+            field.classList.remove('open');
+            trigger.setAttribute('aria-expanded', 'false');
+            if (field.dataset.cs === 'continent') updateCountryDropdown();
+        });
+
+        trigger.addEventListener('keydown', e => {
+            const isOpen = field.classList.contains('open');
+            if (!isOpen && ['ArrowDown', 'ArrowUp', 'Enter', ' '].includes(e.key)) { e.preventDefault(); trigger.click(); return; }
+            if (!isOpen) return;
+            const opts = [...panel.querySelectorAll('.cs-option')];
+            let idx = opts.findIndex(o => o.classList.contains('active'));
+            if (idx < 0) idx = opts.findIndex(o => o.getAttribute('aria-selected') === 'true');
+            if (e.key === 'ArrowDown') { e.preventDefault(); idx = Math.min(idx + 1, opts.length - 1); }
+            else if (e.key === 'ArrowUp') { e.preventDefault(); idx = Math.max(idx - 1, 0); }
+            else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (opts[idx]) opts[idx].click(); return; }
+            else if (e.key === 'Escape') { field.classList.remove('open'); trigger.setAttribute('aria-expanded', 'false'); return; }
+            else return;
+            opts.forEach(o => o.classList.remove('active'));
+            if (opts[idx]) { opts[idx].classList.add('active'); opts[idx].scrollIntoView({ block: 'nearest' }); }
+        });
+    });
+
+    document.addEventListener('click', () => closeAllSelects(null));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAllSelects(null); });
 }
 
 /* ==================== STATS & MARQUEE ==================== */
@@ -1300,9 +1411,9 @@ function runSearch() {
     btn.innerHTML = '<span class="loading-spinner"></span> Searching...';
 
     setTimeout(() => {
-        const prog = document.getElementById('sel-subject').value.toLowerCase();
-        const continent = document.getElementById('sel-continent').value;
-        const country = document.getElementById('sel-country').value;
+        const prog = getSel('sel-subject').toLowerCase();
+        const continent = getSel('sel-continent');
+        const country = getSel('sel-country');
 
         const list = universities.filter(u => {
             const matchProg = prog === 'all' || u.subjects.toLowerCase().includes(prog);
@@ -1607,6 +1718,7 @@ document.querySelectorAll('.tilt').forEach(card => {
 
 /* ==================== INIT ==================== */
 window.addEventListener('DOMContentLoaded', () => {
+    initCustomSelects();
     buildMarquee();
     fetchAndUpdateData();
 });
