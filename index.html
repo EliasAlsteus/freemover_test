@@ -791,7 +791,10 @@ h1 em {
 .results-header h2 { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); font-weight: 400; }
 #results-count { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gold); }
 
-.filters { display: flex; gap: 8px; margin-bottom: 2rem; flex-wrap: wrap; }
+.filters { display: flex; gap: 8px; margin-bottom: 0.75rem; flex-wrap: wrap; align-items: center; }
+.filter-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--dim); margin-right: 4px; }
+.cost-legend { font-size: 0.86rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
+.cost-legend b { color: var(--gold); font-weight: 500; }
 .filter-btn {
     font-family: 'DM Mono', monospace;
     font-size: 10px;
@@ -1145,10 +1148,18 @@ footer .foot-logo { color: var(--muted); }
         <span id="results-count"></span>
     </div>
     <div class="filters" id="filters" style="display:none">
+        <span class="filter-label">Cost / semester</span>
         <button class="filter-btn active" onclick="setFilter(this,'all')">All</button>
-        <button class="filter-btn" onclick="setFilter(this,'freemover')">Takes freemovers</button>
-        <button class="filter-btn" onclick="setFilter(this,'free')">Free tuition</button>
+        <button class="filter-btn" onclick="setFilter(this,'Free')">Free</button>
+        <button class="filter-btn" onclick="setFilter(this,'Low')">Low</button>
+        <button class="filter-btn" onclick="setFilter(this,'Medium')">Medium</button>
+        <button class="filter-btn" onclick="setFilter(this,'High')">High</button>
     </div>
+    <p class="cost-legend" id="cost-legend" style="display:none">
+        Tuition per semester for freemovers —
+        <b>Free</b> no tuition · <b>Low</b> up to €2,000 · <b>Medium</b> €2,000–5,000 · <b>High</b> €5,000+.
+        Always confirm exact fees on the school's own page.
+    </p>
     <div id="uni-list"></div>
 </section>
 
@@ -1493,6 +1504,7 @@ function runSearch() {
 
         document.getElementById('results-header').style.display = 'flex';
         document.getElementById('filters').style.display = 'flex';
+        document.getElementById('cost-legend').style.display = 'block';
         renderList(list);
 
         btn.innerHTML = 'Search Universities <span class="arrow">→</span>';
@@ -1502,8 +1514,9 @@ function runSearch() {
 
 function renderList(list) {
     let filtered = [...list];
-    if (currentFilter === 'freemover') filtered = filtered.filter(u => String(u.freemover).toLowerCase() === 'yes');
-    if (currentFilter === 'free') filtered = filtered.filter(u => String(u.cost_band).toLowerCase() === 'free');
+    if (['free', 'low', 'medium', 'high'].includes(currentFilter.toLowerCase())) {
+        filtered = filtered.filter(u => String(u.cost_band).toLowerCase() === currentFilter.toLowerCase());
+    }
 
     document.getElementById('results-count').textContent = filtered.length + (filtered.length === 1 ? ' university' : ' universities');
     const el = document.getElementById('uni-list');

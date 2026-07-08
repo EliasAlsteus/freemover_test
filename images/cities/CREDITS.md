@@ -33,3 +33,9 @@ derivative work: DavidSpanel (talk)
 Jjtkk, CC BY-SA 3.0
 - **melbourne.jpg** (Melbourne, via en.wikivoyage.org): `File:Wikivoyage_Melbourne_district_map.png` - Ypsilon from Finland, CC0
 - **dunedin.jpg** (Dunedin, via en.wikivoyage.org): `File:Dunedin_Panorama2.jpg` - User DLiebisch on de.wikipedia, Public domain
+- **montreal.jpg** (Montreal, via en.wikivoyage.org): `File:Old_Port_of_Montreal_(French-_Vieux-Port_de_Montréal).jpg` - User Gjm130 on en.wikipedia, CC BY-SA 3.0
+- **brisbane.jpg** (Brisbane, via en.wikivoyage.org): `File:Brisbane_transport_MAN_18.310.jpg` - mailer_diabloTaken as part of SGBuses.com - Photos of Singapore Buses and around Asia, CC BY-SA 3.0
+- **santiago.jpg** (Santiago, via en.wikivoyage.org): `File:Vista_Parcial_de_Santiago_de_Chile_2013.jpg` - Gonzalo Baeza H, CC BY 2.0
+- **monterrey.jpg** (Monterrey, Mexico, via en.wikipedia.org): `File:View_of_Monterrey_(2015).jpg` - Rick González, CC BY 2.0
+- **bologna.jpg** (Bologna, via en.wikivoyage.org): `File:2tours_bologne_082005.jpg` - Patrick Clenet, CC BY-SA 3.0
+- **wellington.jpg** (Wellington, via en.wikivoyage.org): `File:Wellingtonbysteffen.JPG` - No machine-readable author provided. Steffen84~commonswiki assumed (based on copyright claims)., CC BY-SA 2.5
