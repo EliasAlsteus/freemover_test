@@ -71,3 +71,28 @@ derivative work: ויקיג'אנקי, CC0
 - **pretoria.jpg** (Pretoria, via en.wikivoyage.org): `File:South_Africa-Pretoria_Skyline01.jpg` - User:(WT-shared) NJR ZA, CC BY-SA 4.0
 - **ifrane.jpg** (Ifrane, via en.wikivoyage.org): `File:Ifrane_map_with_listings.png` - Selfmade, CC BY-SA 2.0
 - **honolulu.jpg** (Honolulu, via en.wikivoyage.org): `File:Waikiki_beach,_Honolulu.jpg` - (WT-en) Kebes, CC BY 1.0
+
+## Replaced (real photos instead of maps)
+- **san-diego.jpg** (San Diego, re-fetched via en.wikipedia.org pageimage): `File:La_Jolla_Shores_view_(cropped).jpg` - Dirk Hansen, CC BY-SA 3.0
+- **auckland.jpg** (Auckland, re-fetched via en.wikipedia.org pageimage): `File:Auckland_skyline_-_May_2024_(2).jpg` - elpinto007, CC BY-SA 2.0
+- **sydney.jpg** (Sydney, re-fetched via en.wikipedia.org pageimage): `File:Sydney_Opera_House_and_Harbour_Bridge_Dusk_(2)_2019-06-21.jpg` - Benh LIEU SONG (Flickr), CC BY-SA 4.0
+- **prague.jpg** (Prague, re-fetched via en.wikipedia.org pageimage): `File:Prague_(6365119737).jpg` - Moyan Brenn from Italy, CC BY 2.0
+- **melbourne.jpg** (Melbourne, re-fetched via en.wikipedia.org pageimage): `File:Melbourne_skyline_sor.jpg` - Melbpal, CC BY-SA 4.0
+- **manchester.jpg** (Manchester, re-fetched via en.wikipedia.org pageimage): `File:Tower_Blocks_over_Knott_Mill,_geograph_6866152_by_David_Dixon.jpg` - David Dixon, CC BY-SA 2.0
+- **toronto.jpg** (Toronto, re-fetched via en.wikipedia.org pageimage): `File:Toronto_Skyline_from_Olympic_Island,_June_20_2026_(5-3_cropped).jpg` - Dillan Payne, CC BY-SA 4.0
+- **perth.jpg** (Perth, re-fetched via en.wikipedia.org pageimage): `File:Perth_CBD_skyline_from_State_War_Memorial_Lookout,_2023,_04_b.jpg` - File:Perth CBD skyline from State War Memorial Lookout, 2023, 04.jpg: Kgbo
+derivative work: Georgfotoart, CC BY-SA 4.0
+- **cairo.jpg** (Cairo, re-fetched via en.wikipedia.org pageimage): `File:Cairo_Opera_House,_Al_Hurriyah_Park_and_the_Nile_river_(14797782354).jpg` - Jorge Láscar from Melbourne, Australia, CC BY 2.0
+- **tel-aviv.jpg** (Tel Aviv, re-fetched via en.wikipedia.org pageimage): `File:Sarona_CBD_01_(cropped).jpg` - Ynhockey, CC BY-SA 4.0
+- **oslo.jpg** (Oslo, re-fetched via en.wikipedia.org pageimage): `File:Nationaltheatret_evening.jpg` - Orjanarvola, CC BY-SA 4.0
+- **warsaw.jpg** (Warsaw, re-fetched via en.wikipedia.org pageimage): `File:Aleja_Niepdleglosci_Warsaw_2022_aerial_(cropped).jpg` - Emptywords, CC BY-SA 4.0
+- **edmonton.jpg** (Edmonton, re-fetched via en.wikipedia.org pageimage): `File:Alberta_Legislature_Building_at_night.jpg` - Hugh Lee, CC BY-SA 2.0
+- **lima.jpg** (Lima, re-fetched via en.wikipedia.org pageimage): `File:Basílica_Catedral_Metropolitana_de_Lima_(cropped).jpg` - David Felipe Ruiz Hoyos, CC BY-SA 4.0
+- **lisbon.jpg** (Lisbon, re-fetched via en.wikipedia.org pageimage): `File:Lisboa_-_Portugal_(52597836992).jpg` - Vitor Oliveira from Torres Vedras, PORTUGAL, CC BY-SA 2.0
+- **ifrane.jpg** (Ifrane, re-fetched via en.wikipedia.org pageimage): `File:Neige_ifrane.jpg` - nssaw tawahd, FAL
+- **brisbane.jpg** (Brisbane, re-fetched via en.wikipedia.org pageimage): `File:Brisbane_CBD_seen_from_Kangaroo_Point,_2024,_01_(2).jpg` - Chris Olszewski, CC BY-SA 4.0
+- **london.jpg** (London, re-fetched via en.wikipedia.org pageimage): `File:London_Skyline_(125508655).jpeg` - Ilya Grigorik, CC BY-SA 3.0
+- **maastricht.jpg** (Maastricht, re-fetched via en.wikipedia.org pageimage): `File:Maastricht_sunset.jpg` - Bert Kaufmann, CC BY 2.0
+- **hong-kong.jpg** (Hong Kong, re-fetched via commons search): `File:Hong Kong Skyline Panorama - Dec 2008.jpg` - Diliff, CC BY-SA 3.0
+- **johannesburg.jpg** (Johannesburg, re-fetched via en.wikipedia.org pageimage): `File:Johannesburg_skyline_2017.jpg` - Mark Hillary, CC BY 2.0
+- **espoo.jpg** (Espoo, re-fetched via en.wikipedia.org pageimage): `File:Piispansilta_Matinkylä_Espoo_Iso_Omena_280719.jpg` - Drefer, CC BY-SA 4.0
