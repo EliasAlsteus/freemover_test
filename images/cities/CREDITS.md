@@ -47,3 +47,9 @@ Stamen Design, CC BY-SA 3.0
 - **london.jpg** (London, via en.wikivoyage.org): `File:Routemaster_RM871.jpg` - Oxyman, CC BY 2.5
 - **bangkok.jpg** (Bangkok, via en.wikivoyage.org): `File:Grand_Palace_in_Bangkok.jpg` - echiner1, CC BY-SA 2.0
 - **toronto.jpg** (Toronto, via en.wikivoyage.org): `File:Toronto_WV_downtown_districts_map.png` - Shaundd, CC BY-SA 3.0
+- **canberra.jpg** (Canberra, via en.wikivoyage.org): `File:Parliament_House_Canberra_Dusk_Panorama.jpg` - JJ Harrison (https://www.jjharrison.com.au/), CC BY-SA 3.0
+- **perth.jpg** (Perth, via en.wikivoyage.org): `File:Inner-Perth-map-new.svg` - user:cardboardbird, OpenStreetMap, CC BY-SA 4.0
+- **milan.jpg** (Milan, via en.wikivoyage.org): `File:Guardian_of_the_City_(6875524354).jpg` - Bert Kaufmann from Roermond, Netherlands, CC BY-SA 2.0
+- **cairo.jpg** (Cairo, via en.wikivoyage.org): `File:Map-cairo-wikivoyage.svg` - OpenStreetMap contributors; me, ODbL
+- **johannesburg.jpg** (Johannesburg, via en.wikivoyage.org): `File:South_Africa-Johannesburg_Towers01.png` - User:(WT-shared) NJR ZA, CC BY-SA 4.0
+- **tel-aviv.jpg** (Tel Aviv, via en.wikivoyage.org): `File:Wikivoyage_TelAviv_DistrictsMap_PNG.png` - Buzzy Map created by Pavel Belsky, CC BY-SA 4.0
