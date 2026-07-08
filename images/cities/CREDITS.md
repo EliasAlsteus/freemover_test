@@ -61,3 +61,7 @@ derivative work: ויקיג'אנקי, CC BY-SA 3.0
 - **edmonton.jpg** (Edmonton, via en.wikivoyage.org): `File:Edm_district_map.png` - Map drawn originally by (WT-shared) Shaund. Later edits by User:(WT-shared) Cacahuate &amp; User:(WT-shared) Edmontonenthusiast.  Based on information from OpenStreetMap.org and (WT-shared) Edmontonenthusiast, CC BY-SA 4.0
 - **tainan.jpg** (Tainan, via en.wikivoyage.org): `File:安平古堡之美.jpg` - 王崎, CC BY-SA 3.0
 - **lima.jpg** (Lima, via en.wikivoyage.org): `File:Lima_WV_travel_districts_map.svg` - AgainErick (original file); Shaundd (derivative work - create individual polygons for each district and colour code according to English Wikivoyage colour scheme), CC BY-SA 3.0
+- **christchurch.jpg** (Christchurch, via en.wikivoyage.org): `File:2015-01-04-08839-Christchurch_Cathedral.jpg` - Grey Geezer, CC BY-SA 4.0
+- **porto.jpg** (Porto, via en.wikivoyage.org): `File:O_Porto_(visto_da_Ponte_Dom_Luis_I).jpg` - Rititaneves, CC BY-SA 3.0
+- **lisbon.jpg** (Lisbon, via en.wikivoyage.org): `File:Lisboa_freguesias_-_Wikivoyage_City_districts_divison.png` - Lisboa freguesias 2012.svg: Gazilion
+derivative work: ויקיג'אנקי, CC0
