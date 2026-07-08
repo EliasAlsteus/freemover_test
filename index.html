@@ -1414,6 +1414,9 @@ function buildMarquee() {
     // Duplicate the full list so translateX(-50%) loops seamlessly
     const half = cities.map(c => `<span class="mq-item">${esc(c)}</span>`).join('');
     track.innerHTML = half + half;
+    // Scale the duration to the number of cities so the scroll speed stays
+    // calm no matter how many are in the list (~2.8s per city passing by).
+    track.style.animationDuration = Math.max(60, Math.round(cities.length * 2.8)) + 's';
 }
 
 /* ==================== FETCH ==================== */
