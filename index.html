@@ -1408,7 +1408,8 @@ function updateStats() {
 function buildMarquee() {
     const track = document.getElementById('marquee-track');
     let cities = [...new Set(universities.map(u => u.city).filter(Boolean))];
-    if (!cities.length) cities = ['Melbourne', 'Linköping', 'Stellenbosch', 'Auckland', 'Delft', 'Helsinki', 'Seoul', 'Taipei'];
+    // Fallback only shows if the data failed to load.
+    if (!cities.length) cities = ['Auckland', 'Sydney', 'Edinburgh', 'Vancouver', 'Helsinki', 'Seoul', 'Taipei', 'Cape Town'];
     // Duplicate the full list so translateX(-50%) loops seamlessly
     const half = cities.map(c => `<span class="mq-item">${esc(c)}</span>`).join('');
     track.innerHTML = half + half;
@@ -1454,6 +1455,11 @@ function costBandLabel(b) {
     return ({ free: 'Free', low: 'Low', medium: 'Medium', high: 'High' })[s] || '—';
 }
 
+// Only allow http(s) links so a stray CSV value can't inject a javascript: URL.
+function safeUrl(u) {
+    return /^https?:\/\//i.test(u) ? u : '';
+}
+
 function renderCard(u, i) {
     const tags = u.subjects
         ? `<div class="subj-tags">${u.subjects.split(',').map(s => s.trim()).filter(Boolean).slice(0, 6).map(s => `<span class="subj-tag">${esc(s)}</span>`).join('')}</div>`
@@ -1478,7 +1484,7 @@ function renderCard(u, i) {
         </div>
         ${tags}
         ${u.note ? `<p class="card-notes">${esc(u.note)}</p>` : ''}
-        ${u.url ? `<a class="card-link" href="${esc(u.url)}" target="_blank" rel="noopener">Details on their site <span class="arrow">→</span></a>` : ''}
+        ${safeUrl(u.url) ? `<a class="card-link" href="${esc(safeUrl(u.url))}" target="_blank" rel="noopener">Details on their site <span class="arrow">→</span></a>` : ''}
         </div>
     </div>`;
 }
@@ -1660,20 +1666,17 @@ document.querySelectorAll('.tilt').forEach(card => {
 
     // Cap the canvas to ~30fps: the dust drifts slowly, so half the frames
     // look identical but cost half the paint budget — leaving the rest of
-    // the budget for smooth scrolling.
+    // the budget for smooth scrolling. (requestAnimationFrame already pauses
+    // itself while the tab is hidden, so no extra visibility handling is
+    // needed — adding one risks starting a second, parallel loop on resume.)
     const FRAME_MS = 1000 / 30;
-    let last = 0, running = true;
+    let last = 0;
     // Track when the cursor last moved so the constellation lines (an O(n)
     // pass) only run when they can actually be seen changing.
     let lastMove = -1e9;
     addEventListener('mousemove', () => { lastMove = performance.now(); }, { passive: true });
-    document.addEventListener('visibilitychange', () => {
-        running = !document.hidden;
-        if (running) { last = 0; requestAnimationFrame(frame); }
-    });
 
     function frame(t) {
-        if (!running) return;
         if (t - last < FRAME_MS) { requestAnimationFrame(frame); return; }
         last = t;
 
