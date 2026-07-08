@@ -65,3 +65,9 @@ derivative work: ויקיג'אנקי, CC BY-SA 3.0
 - **porto.jpg** (Porto, via en.wikivoyage.org): `File:O_Porto_(visto_da_Ponte_Dom_Luis_I).jpg` - Rititaneves, CC BY-SA 3.0
 - **lisbon.jpg** (Lisbon, via en.wikivoyage.org): `File:Lisboa_freguesias_-_Wikivoyage_City_districts_divison.png` - Lisboa freguesias 2012.svg: Gazilion
 derivative work: ויקיג'אנקי, CC0
+- **espoo.jpg** (Espoo, via en.wikivoyage.org): `File:Isoomenasisältä.jpg` - unknown, CC BY-SA 3.0
+- **beirut.jpg** (Beirut, via en.wikivoyage.org): `File:Saint_George_Maronite_Cathedral_and_Mohammad_Al-Amin_Mosque_by_Lebnen18.jpg` - Lebnen18, CC BY-SA 3.0
+- **sharjah.jpg** (Sharjah, via en.wikivoyage.org): `File:Majaz_2012.jpg` - Wael Mohammed Al-Masri, CC BY-SA 4.0
+- **pretoria.jpg** (Pretoria, via en.wikivoyage.org): `File:South_Africa-Pretoria_Skyline01.jpg` - User:(WT-shared) NJR ZA, CC BY-SA 4.0
+- **ifrane.jpg** (Ifrane, via en.wikivoyage.org): `File:Ifrane_map_with_listings.png` - Selfmade, CC BY-SA 2.0
+- **honolulu.jpg** (Honolulu, via en.wikivoyage.org): `File:Waikiki_beach,_Honolulu.jpg` - (WT-en) Kebes, CC BY 1.0
