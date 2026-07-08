@@ -59,3 +59,5 @@ Stamen Design, CC BY-SA 3.0
 - **warsaw.jpg** (Warsaw, via en.wikivoyage.org): `File:Wikivoyage_Regions_Warsaw_District_Map.png` - Regions_Warsaw_District_Map.png: (WT-shared) Andrew Haggard based on work by Marcin Floryan
 derivative work: ויקיג'אנקי, CC BY-SA 3.0
 - **edmonton.jpg** (Edmonton, via en.wikivoyage.org): `File:Edm_district_map.png` - Map drawn originally by (WT-shared) Shaund. Later edits by User:(WT-shared) Cacahuate &amp; User:(WT-shared) Edmontonenthusiast.  Based on information from OpenStreetMap.org and (WT-shared) Edmontonenthusiast, CC BY-SA 4.0
+- **tainan.jpg** (Tainan, via en.wikivoyage.org): `File:安平古堡之美.jpg` - 王崎, CC BY-SA 3.0
+- **lima.jpg** (Lima, via en.wikivoyage.org): `File:Lima_WV_travel_districts_map.svg` - AgainErick (original file); Shaundd (derivative work - create individual polygons for each district and colour code according to English Wikivoyage colour scheme), CC BY-SA 3.0
