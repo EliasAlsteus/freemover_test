@@ -96,3 +96,6 @@ derivative work: Georgfotoart, CC BY-SA 4.0
 - **hong-kong.jpg** (Hong Kong, re-fetched via commons search): `File:Hong Kong Skyline Panorama - Dec 2008.jpg` - Diliff, CC BY-SA 3.0
 - **johannesburg.jpg** (Johannesburg, re-fetched via en.wikipedia.org pageimage): `File:Johannesburg_skyline_2017.jpg` - Mark Hillary, CC BY 2.0
 - **espoo.jpg** (Espoo, re-fetched via en.wikipedia.org pageimage): `File:Piispansilta_Matinkylä_Espoo_Iso_Omena_280719.jpg` - Drefer, CC BY-SA 4.0
+
+## Replaced (better subject)
+- **hsinchu.jpg** (National Yang Ming Chiao Tung University entrance, via Commons): `File:National Yang Ming Chiao Tung University 20210203.jpg` - CC BY-SA
