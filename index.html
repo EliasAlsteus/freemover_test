@@ -84,6 +84,10 @@ body {
 #stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
 
 .grain { position: fixed; inset: 0; z-index: 3; pointer-events: none; opacity: 0.05;
+    /* Promote to its own GPU layer: the full-screen turbulence is rasterized
+       once and composited, never repainted as content moves beneath it. */
+    transform: translateZ(0);
+    will-change: transform;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -439,7 +443,7 @@ h1 em {
 .search-panel:hover::before { opacity: 1; }
 
 .search-grid-full { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 10px; }
-.search-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.search-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
 .field {
     position: relative;
@@ -555,6 +559,10 @@ h1 em {
 .journey-title em { font-style: italic; color: var(--gold-bright); }
 .journey-map { position: relative; width: 100%; aspect-ratio: 1000 / 520; max-height: 68vh; }
 .journey-map svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+/* Keep the animated flight layers on their own raster so scrubbing the
+   path/plane doesn't repaint the rest of the page. */
+#flight-path { will-change: stroke-dashoffset; }
+#plane { will-change: transform; }
 
 .flight-bg { fill: none; stroke: rgba(63,115,80,0.22); stroke-width: 1.5; stroke-dasharray: 3 9; stroke-linecap: round; }
 #flight-path { fill: none; stroke: var(--gold); stroke-width: 2; stroke-linecap: round; }
@@ -881,7 +889,7 @@ footer .foot-logo { color: var(--muted); }
     nav { padding: 1.2rem 1.4rem; }
     .hero { padding: 4rem 1.4rem 2.5rem; }
     .hero-stats { gap: 2rem; }
-    .search-grid-3, .featured-grid { grid-template-columns: 1fr; }
+    .search-grid-2, .featured-grid { grid-template-columns: 1fr; }
     .search-section, .featured-section, .results, .divider { padding-left: 1.4rem; padding-right: 1.4rem; }
     footer { padding: 2rem 1.4rem; }
 }
@@ -999,7 +1007,7 @@ footer .foot-logo { color: var(--muted); }
                 </select>
             </div>
         </div>
-        <div class="search-grid-3">
+        <div class="search-grid-2">
             <div class="field">
                 <label>Continent</label>
                 <select id="sel-continent" onchange="updateCountryDropdown()">
@@ -1010,13 +1018,6 @@ footer .foot-logo { color: var(--muted); }
                 <label>Country</label>
                 <select id="sel-country">
                     <option value="all">All Countries</option>
-                </select>
-            </div>
-            <div class="field">
-                <label>Language</label>
-                <select id="sel-lang">
-                    <option value="all">All</option>
-                    <option value="English">English</option>
                 </select>
             </div>
         </div>
@@ -1191,9 +1192,6 @@ function updateDropdowns() {
     const subjects = [...new Set(universities.flatMap(u => u.subjects.split(',').map(s => s.trim())))].filter(Boolean).sort();
     fillSelect(document.getElementById('sel-subject'), subjects, 'Show All Programs');
 
-    const langs = [...new Set(universities.map(u => u.lang))].filter(Boolean).sort();
-    fillSelect(document.getElementById('sel-lang'), langs, 'All');
-
     updateCountryDropdown();
 }
 
@@ -1301,14 +1299,12 @@ function runSearch() {
         const prog = document.getElementById('sel-subject').value.toLowerCase();
         const continent = document.getElementById('sel-continent').value;
         const country = document.getElementById('sel-country').value;
-        const lang = document.getElementById('sel-lang').value.toLowerCase();
 
         const list = universities.filter(u => {
             const matchProg = prog === 'all' || u.subjects.toLowerCase().includes(prog);
             const matchCont = continent === 'all' || u.continent === continent;
             const matchCountry = country === 'all' || u.country === country;
-            const matchLang = lang === 'all' || u.lang.toLowerCase().includes(lang);
-            return matchProg && matchCont && matchCountry && matchLang;
+            return matchProg && matchCont && matchCountry;
         });
 
         list.sort((a, b) => a.name.localeCompare(b.name));
@@ -1468,7 +1464,25 @@ document.querySelectorAll('.tilt').forEach(card => {
     resize();
     addEventListener('resize', resize);
 
+    // Cap the canvas to ~30fps: the dust drifts slowly, so half the frames
+    // look identical but cost half the paint budget — leaving the rest of
+    // the budget for smooth scrolling.
+    const FRAME_MS = 1000 / 30;
+    let last = 0, running = true;
+    // Track when the cursor last moved so the constellation lines (an O(n)
+    // pass) only run when they can actually be seen changing.
+    let lastMove = -1e9;
+    addEventListener('mousemove', () => { lastMove = performance.now(); }, { passive: true });
+    document.addEventListener('visibilitychange', () => {
+        running = !document.hidden;
+        if (running) { last = 0; requestAnimationFrame(frame); }
+    });
+
     function frame(t) {
+        if (!running) return;
+        if (t - last < FRAME_MS) { requestAnimationFrame(frame); return; }
+        last = t;
+
         ctx.clearRect(0, 0, W, H);
         for (const p of pts) {
             // gentle drift + wrap
@@ -1490,17 +1504,20 @@ document.querySelectorAll('.tilt').forEach(card => {
             ctx.fillStyle = `rgba(222, 205, 168, ${Math.max(alpha, 0.04)})`;
             ctx.fill();
         }
-        // constellation lines near cursor
-        ctx.lineWidth = 0.5;
-        for (const p of pts) {
-            const dx = p.x - mouseX, dy = p.y - mouseY;
-            const d = Math.hypot(dx, dy);
-            if (d < 150) {
-                ctx.beginPath();
-                ctx.moveTo(p.x, p.y);
-                ctx.lineTo(mouseX, mouseY);
-                ctx.strokeStyle = `rgba(216, 189, 138, ${0.14 * (1 - d / 150)})`;
-                ctx.stroke();
+        // constellation lines near cursor — skip entirely while the mouse is idle
+        if (t - lastMove < 1600) {
+            ctx.lineWidth = 0.5;
+            for (const p of pts) {
+                const dx = p.x - mouseX, dy = p.y - mouseY;
+                const d2 = dx * dx + dy * dy;
+                if (d2 < 22500) {
+                    const d = Math.sqrt(d2);
+                    ctx.beginPath();
+                    ctx.moveTo(p.x, p.y);
+                    ctx.lineTo(mouseX, mouseY);
+                    ctx.strokeStyle = `rgba(216, 189, 138, ${0.14 * (1 - d / 150)})`;
+                    ctx.stroke();
+                }
             }
         }
         requestAnimationFrame(frame);
@@ -1558,17 +1575,29 @@ document.querySelectorAll('.tilt').forEach(card => {
         return;
     }
 
-    let ticking = false;
-    function update() {
+    // Cache the section's geometry so the scroll handler never reads layout
+    // (offsetTop/offsetHeight force a synchronous reflow); recompute only on
+    // resize and once images/fonts settle.
+    let sectionTop = 0, scrollRange = 1;
+    function measure() {
         const rect = section.getBoundingClientRect();
-        const total = section.offsetHeight - innerHeight;
-        const p = Math.min(Math.max(-rect.top / total, 0), 1);
+        sectionTop = rect.top + window.scrollY;
+        scrollRange = Math.max(section.offsetHeight - innerHeight, 1);
+    }
+
+    let ticking = false, lastP = -1;
+    function update() {
+        const p = Math.min(Math.max((window.scrollY - sectionTop) / scrollRange, 0), 1);
+        if (Math.abs(p - lastP) < 0.0006) return;   // skip redundant repaints
+        lastP = p;
         setProgress(p);
     }
     addEventListener('scroll', () => {
         if (!ticking) { ticking = true; requestAnimationFrame(() => { update(); ticking = false; }); }
     }, { passive: true });
-    addEventListener('resize', update);
+    addEventListener('resize', () => { measure(); lastP = -1; update(); });
+    window.addEventListener('load', () => { measure(); lastP = -1; update(); });
+    measure();
     update();
 })();
 
