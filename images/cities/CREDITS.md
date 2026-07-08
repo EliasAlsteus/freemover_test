@@ -39,3 +39,11 @@ Jjtkk, CC BY-SA 3.0
 - **monterrey.jpg** (Monterrey, Mexico, via en.wikipedia.org): `File:View_of_Monterrey_(2015).jpg` - Rick González, CC BY 2.0
 - **bologna.jpg** (Bologna, via en.wikivoyage.org): `File:2tours_bologne_082005.jpg` - Patrick Clenet, CC BY-SA 3.0
 - **wellington.jpg** (Wellington, via en.wikivoyage.org): `File:Wellingtonbysteffen.JPG` - No machine-readable author provided. Steffen84~commonswiki assumed (based on copyright claims)., CC BY-SA 2.5
+- **edinburgh.jpg** (Edinburgh, via en.wikivoyage.org): `File:Ross_Fountain_Princes_St_Gardens_02.jpg` - Ad Meskens, CC BY-SA 3.0
+- **manchester.jpg** (Manchester, via en.wikivoyage.org): `File:Manchester_WV_map.png` - Tim Sandell
+Saqib
+Nicholasjf21 (talk)
+Stamen Design, CC BY-SA 3.0
+- **london.jpg** (London, via en.wikivoyage.org): `File:Routemaster_RM871.jpg` - Oxyman, CC BY 2.5
+- **bangkok.jpg** (Bangkok, via en.wikivoyage.org): `File:Grand_Palace_in_Bangkok.jpg` - echiner1, CC BY-SA 2.0
+- **toronto.jpg** (Toronto, via en.wikivoyage.org): `File:Toronto_WV_downtown_districts_map.png` - Shaundd, CC BY-SA 3.0
