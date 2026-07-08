@@ -53,3 +53,9 @@ Stamen Design, CC BY-SA 3.0
 - **cairo.jpg** (Cairo, via en.wikivoyage.org): `File:Map-cairo-wikivoyage.svg` - OpenStreetMap contributors; me, ODbL
 - **johannesburg.jpg** (Johannesburg, via en.wikivoyage.org): `File:South_Africa-Johannesburg_Towers01.png` - User:(WT-shared) NJR ZA, CC BY-SA 4.0
 - **tel-aviv.jpg** (Tel Aviv, via en.wikivoyage.org): `File:Wikivoyage_TelAviv_DistrictsMap_PNG.png` - Buzzy Map created by Pavel Belsky, CC BY-SA 4.0
+- **nijmegen.jpg** (Nijmegen, via en.wikivoyage.org): `File:Valkhofkapel.JPG` - unknown, CC BY-SA 3.0
+- **oslo.jpg** (Oslo, via en.wikivoyage.org): `File:Wikivoyage_Oslo_district_map_PNG.png` - Ypsilon from Finland, CC0
+- **aarhus.jpg** (Aarhus, via en.wikivoyage.org): `File:Your_rainbow_panorama_på_taget_af_ARoS_Aarhus_Kunstmuseum.jpg` - Ssjensby, CC BY-SA 4.0
+- **warsaw.jpg** (Warsaw, via en.wikivoyage.org): `File:Wikivoyage_Regions_Warsaw_District_Map.png` - Regions_Warsaw_District_Map.png: (WT-shared) Andrew Haggard based on work by Marcin Floryan
+derivative work: ויקיג'אנקי, CC BY-SA 3.0
+- **edmonton.jpg** (Edmonton, via en.wikivoyage.org): `File:Edm_district_map.png` - Map drawn originally by (WT-shared) Shaund. Later edits by User:(WT-shared) Cacahuate &amp; User:(WT-shared) Edmontonenthusiast.  Based on information from OpenStreetMap.org and (WT-shared) Edmontonenthusiast, CC BY-SA 4.0
