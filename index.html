@@ -1825,13 +1825,14 @@ document.querySelectorAll('.tilt').forEach(card => {
 })();
 
 /* ==================== CONTACT LINK ==================== */
-/* The address is never in the HTML source. It is assembled in JS the moment
-   the visitor hovers, tabs to or clicks the link, so scrapers that just read
-   the page never see it. */
+/* The address is never in the HTML source. It is assembled in JS, so scrapers
+   that only read the page never see an address-shaped string. Visitors get the
+   full address as visible text; without JS the link still reads Contact. */
 function initContactLink() {
     const link = document.getElementById('contact-link');
     if (!link) return;
-    const address = () => ['elias.alsteus', 'gmail.com'].join(String.fromCharCode(64));
+    const address = () => ['hello', 'gofreemover.com'].join(String.fromCharCode(64));
+    link.textContent = address();
     const arm = () => { link.href = 'mailto:' + address(); };
     link.addEventListener('mouseenter', arm);
     link.addEventListener('focus', arm);
