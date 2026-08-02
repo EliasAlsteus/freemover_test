@@ -1185,7 +1185,7 @@ footer .foot-logo { color: var(--muted); }
 <footer>
     <span class="foot-logo">GoFreemover © 2026</span>
     <a href="explore/" style="color: inherit;">Browse by country &amp; subject</a>
-    <a href="mailto:elias.alsteus@gmail.com" style="color: inherit;">Contact: elias.alsteus@gmail.com</a>
+    <a href="#" id="contact-link" rel="nofollow" style="color: inherit;">Contact</a>
     <a href="https://github.com/EliasAlsteus/freemover_test/blob/main/images/cities/CREDITS.md" target="_blank" rel="noopener" style="color: inherit;">Photo credits</a>
     <span>Sync: <span id="last-sync">...</span></span>
 </footer>
@@ -1824,8 +1824,26 @@ document.querySelectorAll('.tilt').forEach(card => {
     update();
 })();
 
+/* ==================== CONTACT LINK ==================== */
+/* The address is never in the HTML source. It is assembled in JS the moment
+   the visitor hovers, tabs to or clicks the link, so scrapers that just read
+   the page never see it. */
+function initContactLink() {
+    const link = document.getElementById('contact-link');
+    if (!link) return;
+    const address = () => ['elias.alsteus', 'gmail.com'].join(String.fromCharCode(64));
+    const arm = () => { link.href = 'mailto:' + address(); };
+    link.addEventListener('mouseenter', arm);
+    link.addEventListener('focus', arm);
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = 'mailto:' + address();
+    });
+}
+
 /* ==================== INIT ==================== */
 window.addEventListener('DOMContentLoaded', () => {
+    initContactLink();
     initCustomSelects();
     buildMarquee();
     fetchAndUpdateData();
